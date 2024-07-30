@@ -1,2 +1,3 @@
-# prisma-pg-comments-generator
-Generate PostgreSQL comments from Prisma schema
+# prisma-comments-generator
+
+Generate comments from Prisma schema.
