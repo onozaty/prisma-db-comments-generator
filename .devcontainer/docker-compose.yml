@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+      - app-node-modules:/workspaces/app/node_modules
+    command: sleep infinity
+    network_mode: service:db
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: db_password
+      POSTGRES_USER: db_user
+      POSTGRES_DB: sample
+  pgadmin4:
+    image: dpage/pgadmin4:latest
+    ports:
+      - 8080:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./pgamin/servers.json:/pgadmin4/servers.json
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@example.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    depends_on:
+      - db
+volumes:
+  postgres-data:
+  app-node-modules:
+  pgadmin-data:
