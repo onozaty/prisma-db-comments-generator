@@ -1,0 +1,43 @@
+{
+  "name": "@onozaty/prisma-pg-comments-generator",
+  "version": "1.0.0",
+  "description": "Generate PostgreSQL comments from Prisma schema",
+  "bin": {
+    "prisma-pg-comments-generator": "./dist/generator.js"
+  },
+  "scripts": {
+    "format": "prettier --write src/**",
+    "lint": "eslint src/**"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onozaty/prisma-pg-comments-generator.git"
+  },
+  "keywords": [
+    "prisma",
+    "generator",
+    "postgresql"
+  ],
+  "author": "onozaty",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/onozaty/prisma-pg-comments-generator/issues"
+  },
+  "homepage": "https://github.com/onozaty/prisma-pg-comments-generator#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@prisma/client": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^8.57.0",
+    "globals": "^15.8.0",
+    "prettier": "^3.3.3",
+    "prisma": "^5.0.0",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^7.18.0"
+  },
+  "dependencies": {
+    "@prisma/generator-helper": "^5.0.0",
+    "@prisma/internals": "^5.0.0"
+  }
+}
