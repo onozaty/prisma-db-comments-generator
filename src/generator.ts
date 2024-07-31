@@ -14,28 +14,36 @@ import {
   GeneratorOptions,
   generatorHandler,
 } from "@prisma/generator-helper";
-import { getDMMF, parseEnvValue } from "@prisma/internals";
+import { parseEnvValue } from "@prisma/internals";
+import { Model, parse } from "./parser";
 
-async function generateModelComment(model: any): Promise<string[]> {
-  const modelName = model.dbName ?? model.name;
-
+const generateModelComment = (model: Model): string[] => {
   const commentStatements: string[] = [];
 
-  model.fields.forEach((field: any) => {
-    if (!field.documentation) {
-      return;
+  if (model.documentation) {
+    // ON TABLE
+    commentStatements.push(
+      `COMMENT ON TABLE "${model.dbName}" IS '${escapeComment(model.documentation)}';`,
+    );
+  }
+
+  for (const field of model.fields) {
+    if (field.documentation) {
+      // ON COLUMN
+      commentStatements.push(
+        `COMMENT ON COLUMN "${model.dbName}"."${field.dbName}" IS '${escapeComment(field.documentation)}';`,
+      );
     }
+  }
 
-    const escapedComment = field.documentation?.replace(/'/g, "''") ?? "";
+  return [`-- ${model.dbName} comments`, ...commentStatements, ""];
+};
 
-    const commentTemplate = `COMMENT ON COLUMN "${modelName}"."${field.name}" IS '${escapedComment}';`;
-    commentStatements.push(commentTemplate);
-  });
+const escapeComment = (comment: string) => {
+  return comment.replace(/'/g, "''");
+};
 
-  return [`-- Model ${modelName} comments`, "", ...commentStatements, ""];
-}
-
-async function fileHash(file: string, allowEmpty = false): Promise<string> {
+const fileHash = async (file: string, allowEmpty = false): Promise<string> => {
   try {
     const fileContent = await fs.readFile(file, "utf-8");
 
@@ -48,44 +56,28 @@ async function fileHash(file: string, allowEmpty = false): Promise<string> {
 
     throw e;
   }
-}
+};
 
-async function lockChanged(
+const lockChanged = async (
   lockFile: string,
   tmpLockFile: string,
-): Promise<boolean> {
+): Promise<boolean> => {
   return (await fileHash(lockFile, true)) !== (await fileHash(tmpLockFile));
-}
+};
 
-export async function generate(options: GeneratorOptions) {
+const generate = async (options: GeneratorOptions) => {
   const outputDir = parseEnvValue(options.generator.output as EnvValue);
   await fs.mkdir(outputDir, { recursive: true });
 
-  const prismaClientProvider = options.otherGenerators.find(
-    (it) => parseEnvValue(it.provider) === "prisma-client-js",
-  );
-
-  const prismaClientDmmf = await getDMMF({
-    datamodel: options.datamodel,
-    previewFeatures: prismaClientProvider?.previewFeatures,
-  });
-
-  const promises: Promise<string[]>[] = [];
-
-  prismaClientDmmf.datamodel.models.forEach((model: any) => {
-    promises.push(generateModelComment(model));
-  });
-
-  const allStatements = await Promise.all(promises);
+  const models = parse(options.dmmf.datamodel);
+  const allStatements = models.map((x) => generateModelComment(x)).flat();
 
   const tmpLock = await fs.open(`${outputDir}/.comments-lock.tmp`, "w+");
 
   await tmpLock.write("-- generator-version: 1.0.0\n\n");
 
   // concat all promises and separate with new line and two newlines between each model
-  const allStatementsString = allStatements
-    .map((statements) => statements.join("\n"))
-    .join("\n\n");
+  const allStatementsString = allStatements.join("\n");
 
   await tmpLock.write(allStatementsString);
   await tmpLock.close();
@@ -135,7 +127,7 @@ export async function generate(options: GeneratorOptions) {
   await fs.unlink(`${outputDir}/.comments-lock.tmp`);
 
   console.log("Comment generation completed");
-}
+};
 
 generatorHandler({
   onManifest() {
