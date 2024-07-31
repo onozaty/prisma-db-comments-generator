@@ -1,3 +1,3 @@
-# prisma-comments-generator
+# prisma-db-comments-generator
 
-Generate comments from Prisma schema.
+Generate database comments from Prisma schema.
