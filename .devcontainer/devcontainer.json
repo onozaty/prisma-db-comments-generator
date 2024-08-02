@@ -9,7 +9,8 @@
       "extensions": [
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
-        "Prisma.prisma"
+        "Prisma.prisma",
+        "Orta.vscode-jest"
       ]
     }
   }

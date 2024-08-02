@@ -5,7 +5,6 @@ generator client {
 
 generator comments {
   provider = "tsx src/generator.ts"
-  output   = "migrations"
 }
 
 datasource db {
