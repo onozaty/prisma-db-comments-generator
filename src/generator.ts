@@ -104,7 +104,7 @@ const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
 
   if (commentStatements.length === 0) {
     console.log(
-      "No changes detected, skipping creating a fresh comment migration...",
+      "No changes detected, skipping creating a fresh comments migration...",
     );
     return;
   }
@@ -121,7 +121,7 @@ const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
     "utf-8",
   );
 
-  console.log(`Comment generation completed : ${migrationDirName}`);
+  console.log(`Comments generation completed: ${migrationDirName}`);
 };
 
 const outputMigrationFile = async (
@@ -141,7 +141,8 @@ const outputMigrationFile = async (
   await fs.mkdir(migrationDir, { recursive: true });
   await fs.writeFile(
     path.join(migrationDir, "migration.sql"),
-    commentStatements.join("\n"),
+    `-- Prisma Database Comments Generator v${version}\n\n` +
+      commentStatements.join("\n"),
     "utf-8",
   );
 
@@ -150,9 +151,9 @@ const outputMigrationFile = async (
 
 generatorHandler({
   onManifest: () => ({
-    version,
+    version: `v${version}`,
     defaultOutput: "migrations",
-    prettyName: "Prisma Database comments Generator",
+    prettyName: "Prisma Database Comments",
   }),
   onGenerate: generate,
 });
