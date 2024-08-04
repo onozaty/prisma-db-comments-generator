@@ -41,8 +41,22 @@ const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
     ignorePattern = new RegExp(generator.config.ignorePattern);
   }
 
+  let includeEnumInFeildComment = false;
+  if (
+    generator.config.includeEnumInFeildComment &&
+    typeof generator.config.includeEnumInFeildComment === "string"
+  ) {
+    includeEnumInFeildComment =
+      generator.config.includeEnumInFeildComment === "true";
+  }
+
   const models = parse(dmmf.datamodel);
-  const currentComments = createComments(models, targets, ignorePattern);
+  const currentComments = createComments(
+    models,
+    targets,
+    ignorePattern,
+    includeEnumInFeildComment,
+  );
 
   // load latest
   const latestFilePath = path.join(outputDir, "comments-latest.json");

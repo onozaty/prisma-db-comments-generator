@@ -4,8 +4,9 @@ generator client {
 }
 
 generator comments {
-  provider      = "tsx src/generator.ts"
-  ignorePattern = "_view$"
+  provider                  = "tsx src/generator.ts"
+  ignorePattern             = "_view$"
+  includeEnumInFeildComment = true
 }
 
 datasource db {

@@ -38,5 +38,5 @@ const commentValue = (comment?: string) => {
 };
 
 const escapeComment = (comment: string) => {
-  return comment.replace(/'/g, "''");
+  return comment.replace(/'/g, "''").replace(/\n/g, "\\n");
 };

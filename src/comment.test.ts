@@ -7,7 +7,7 @@ describe("createComments", () => {
     const models: Model[] = [];
 
     // ACT
-    const comments = createComments(models, AllTargets, undefined);
+    const comments = createComments(models, AllTargets, undefined, false);
 
     // ASSERT
     expect(comments).toStrictEqual({});
@@ -49,7 +49,7 @@ describe("createComments", () => {
     ];
 
     // ACT
-    const comments = createComments(models, AllTargets, undefined);
+    const comments = createComments(models, AllTargets, undefined, false);
 
     // ASSERT
     expect(comments).toStrictEqual({

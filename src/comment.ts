@@ -1,4 +1,4 @@
-import { Model } from "./parser";
+import { Field, Model } from "./parser";
 
 export type Comments = {
   [key: string]: TableComments;
@@ -27,6 +27,7 @@ export const createComments = (
   models: readonly Model[],
   targets: readonly Target[],
   ignorePattern: RegExp | undefined,
+  includeEnumInFeildComment: boolean,
 ): Comments => {
   const comments: Comments = {};
 
@@ -47,7 +48,10 @@ export const createComments = (
             return {
               tableName: model.dbName,
               columnName: field.dbName,
-              comment: field.documentation ?? "",
+              comment: createFieldCommentString(
+                field,
+                includeEnumInFeildComment,
+              ),
             };
           })
         : undefined,
@@ -55,6 +59,19 @@ export const createComments = (
   }
 
   return comments;
+};
+
+const createFieldCommentString = (
+  field: Field,
+  includeEnumInFeildComment: boolean,
+) => {
+  let comment = field.documentation ?? "";
+
+  if (includeEnumInFeildComment && field.typeEnum) {
+    comment += `\nenum: ${field.typeEnum.dbName}(${field.typeEnum.values.join(", ")})`;
+  }
+
+  return comment;
 };
 
 export const diffComments = (first: Comments, second: Comments): Comments => {
