@@ -1,4 +1,4 @@
-import { Comments, createComments, diffComments } from "./comment";
+import { AllTargets, Comments, createComments, diffComments } from "./comment";
 import { Model } from "./parser";
 
 describe("createComments", () => {
@@ -7,7 +7,7 @@ describe("createComments", () => {
     const models: Model[] = [];
 
     // ACT
-    const comments = createComments(models);
+    const comments = createComments(models, AllTargets, undefined);
 
     // ASSERT
     expect(comments).toStrictEqual({});
@@ -49,7 +49,7 @@ describe("createComments", () => {
     ];
 
     // ACT
-    const comments = createComments(models);
+    const comments = createComments(models, AllTargets, undefined);
 
     // ASSERT
     expect(comments).toStrictEqual({

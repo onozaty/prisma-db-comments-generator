@@ -20,22 +20,37 @@ export type ColumnComment = {
   comment: string;
 };
 
-export const createComments = (models: Model[]): Comments => {
+export const AllTargets = ["table", "column"] as const;
+export type Target = (typeof AllTargets)[number];
+
+export const createComments = (
+  models: readonly Model[],
+  targets: readonly Target[],
+  ignorePattern: RegExp | undefined,
+): Comments => {
   const comments: Comments = {};
 
   for (const model of models) {
+    if (ignorePattern && ignorePattern.test(model.dbName)) {
+      continue;
+    }
+
     comments[model.dbName] = {
-      table: {
-        tableName: model.dbName,
-        comment: model.documentation ?? "",
-      },
-      columns: model.fields.map((field) => {
-        return {
-          tableName: model.dbName,
-          columnName: field.dbName,
-          comment: field.documentation ?? "",
-        };
-      }),
+      table: targets.includes("table")
+        ? {
+            tableName: model.dbName,
+            comment: model.documentation ?? "",
+          }
+        : undefined,
+      columns: targets.includes("column")
+        ? model.fields.map((field) => {
+            return {
+              tableName: model.dbName,
+              columnName: field.dbName,
+              comment: field.documentation ?? "",
+            };
+          })
+        : undefined,
     };
   }
 

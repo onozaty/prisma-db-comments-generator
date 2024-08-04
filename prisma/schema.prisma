@@ -4,7 +4,8 @@ generator client {
 }
 
 generator comments {
-  provider = "tsx src/generator.ts"
+  provider      = "tsx src/generator.ts"
+  ignorePattern = "_view$"
 }
 
 datasource db {
@@ -71,6 +72,7 @@ model Sale {
   @@map("sales")
 }
 
+/// Customer Sale Summary View
 view CustomerSaleSummaryView {
   /// Customer ID
   customerId         Int    @id @map("customer_id")

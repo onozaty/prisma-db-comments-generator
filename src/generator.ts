@@ -8,85 +8,41 @@
 
 import {
   EnvValue,
-  GeneratorOptions,
   generatorHandler,
+  GeneratorOptions,
 } from "@prisma/generator-helper";
 import { parseEnvValue } from "@prisma/internals";
 import { promises as fs } from "fs";
 import path from "path";
 import { version } from "../package.json";
-import { Comments, createComments, diffComments } from "./comment";
+import {
+  AllTargets,
+  Comments,
+  createComments,
+  diffComments,
+  Target,
+} from "./comment";
 import { parse } from "./parser";
-
-const generateCommentStatements = (comments: Comments): string[] => {
-  const commentStatements: string[] = [];
-
-  for (const tableName in comments) {
-    const { table, columns } = comments[tableName];
-
-    commentStatements.push(`-- ${tableName} comments`);
-    if (table) {
-      // ON TABLE
-      commentStatements.push(
-        `COMMENT ON TABLE "${table.tableName}" IS ${commentValue(table.comment)};`,
-      );
-    }
-
-    if (columns) {
-      for (const column of columns) {
-        // ON COLUMN
-        commentStatements.push(
-          `COMMENT ON COLUMN "${column.tableName}"."${column.columnName}" IS ${commentValue(column.comment)};`,
-        );
-      }
-    }
-
-    commentStatements.push("");
-  }
-
-  return commentStatements;
-};
-
-const commentValue = (comment?: string) => {
-  if (comment) {
-    return `'${escapeComment(comment)}'`;
-  } else {
-    return "NULL";
-  }
-};
-
-const escapeComment = (comment: string) => {
-  return comment.replace(/'/g, "''");
-};
-
-const exists = async (path: string) => {
-  try {
-    await fs.access(path);
-    return true;
-  } catch (err) {
-    if (
-      typeof err === "object" &&
-      err !== null &&
-      "code" in err &&
-      err.code === "ENOENT"
-    ) {
-      return false;
-    }
-
-    throw err;
-  }
-};
+import { generateCommentStatements } from "./statement";
 
 const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
   const outputDir = parseEnvValue(generator.output as EnvValue);
   await fs.mkdir(outputDir, { recursive: true });
 
-  const targets = Array.isArray(generator.config.targets)
-    ? generator.config.targets
-    : ["table", "column"];
+  const targets: readonly Target[] = Array.isArray(generator.config.targets)
+    ? (generator.config.targets as Target[])
+    : AllTargets;
+
+  let ignorePattern;
+  if (
+    generator.config.ignorePattern &&
+    typeof generator.config.ignorePattern === "string"
+  ) {
+    ignorePattern = new RegExp(generator.config.ignorePattern);
+  }
 
   const models = parse(dmmf.datamodel);
-  const currentComments = createComments(models);
+  const currentComments = createComments(models, targets, ignorePattern);
 
   // load latest
   const latestFilePath = path.join(outputDir, "comments-latest.json");
@@ -122,6 +78,24 @@ const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
   );
 
   console.log(`Comments generation completed: ${migrationDirName}`);
+};
+
+const exists = async (path: string) => {
+  try {
+    await fs.access(path);
+    return true;
+  } catch (err) {
+    if (
+      typeof err === "object" &&
+      err !== null &&
+      "code" in err &&
+      err.code === "ENOENT"
+    ) {
+      return false;
+    }
+
+    throw err;
+  }
 };
 
 const outputMigrationFile = async (
