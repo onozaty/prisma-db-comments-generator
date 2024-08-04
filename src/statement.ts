@@ -31,7 +31,8 @@ export const generateCommentStatements = (comments: Comments): string[] => {
 
 const commentValue = (comment?: string) => {
   if (comment) {
-    return `'${escapeComment(comment)}'`;
+    const commentValue = `'${escapeComment(comment)}'`;
+    return commentValue.includes("\\") ? "E" + commentValue : commentValue;
   } else {
     return "NULL";
   }
