@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * This code is based on the following code by @Jyrno42
  * https://github.com/prisma/prisma/issues/8703#issuecomment-1614360386
