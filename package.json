@@ -6,6 +6,8 @@
     "prisma-db-comments-generator": "./dist/generator.js"
   },
   "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
     "format": "prettier --write src/**",
     "lint": "eslint src/**",
     "test": "jest",
