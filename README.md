@@ -182,19 +182,19 @@ generator comments {
 }
 ```
 
-### includeEnumInFeildComment
+### includeEnumInFieldComment
 
-If `includeEnumInFeildComment` is set to true, information about the enum is appended to the column comment.  
+If `includeEnumInFieldComment` is set to true, information about the enum is appended to the column comment.  
 Default is `false`.
 
 ```prisma
 generator comments {
   provider                  = "prisma-db-comments-generator"
-  includeEnumInFeildComment = true
+  includeEnumInFieldComment = true
 }
 ```
 
-If `includeEnumInFeildComment` is set to `true` with the following definition,
+If `includeEnumInFieldComment` is set to `true` with the following definition,
 
 ```prisma
 enum ProductType {

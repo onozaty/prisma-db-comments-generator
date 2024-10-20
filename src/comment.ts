@@ -27,7 +27,7 @@ export const createComments = (
   models: readonly Model[],
   targets: readonly Target[],
   ignorePattern: RegExp | undefined,
-  includeEnumInFeildComment: boolean,
+  includeEnumInFieldComment: boolean,
 ): Comments => {
   const comments: Comments = {};
 
@@ -50,7 +50,7 @@ export const createComments = (
               columnName: field.dbName,
               comment: createFieldCommentString(
                 field,
-                includeEnumInFeildComment,
+                includeEnumInFieldComment,
               ),
             };
           })
@@ -63,11 +63,11 @@ export const createComments = (
 
 const createFieldCommentString = (
   field: Field,
-  includeEnumInFeildComment: boolean,
+  includeEnumInFieldComment: boolean,
 ) => {
   let comment = field.documentation ?? "";
 
-  if (includeEnumInFeildComment && field.typeEnum) {
+  if (includeEnumInFieldComment && field.typeEnum) {
     comment += `\nenum: ${field.typeEnum.dbName}(${field.typeEnum.values.join(", ")})`;
   }
 
