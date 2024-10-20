@@ -1,6 +1,6 @@
 {
   "name": "@onozaty/prisma-db-comments-generator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Generate database comments from Prisma schema",
   "bin": {
     "prisma-db-comments-generator": "./dist/generator.js"
