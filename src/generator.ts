@@ -42,13 +42,13 @@ const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
     ignorePattern = new RegExp(generator.config.ignorePattern);
   }
 
-  let includeEnumInFeildComment = false;
+  let includeEnumInFieldComment = false;
   if (
-    generator.config.includeEnumInFeildComment &&
-    typeof generator.config.includeEnumInFeildComment === "string"
+    generator.config.includeEnumInFieldComment &&
+    typeof generator.config.includeEnumInFieldComment === "string"
   ) {
-    includeEnumInFeildComment =
-      generator.config.includeEnumInFeildComment === "true";
+    includeEnumInFieldComment =
+      generator.config.includeEnumInFieldComment === "true";
   }
 
   const models = parse(dmmf.datamodel);
@@ -56,7 +56,7 @@ const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
     models,
     targets,
     ignorePattern,
-    includeEnumInFeildComment,
+    includeEnumInFieldComment,
   );
 
   // load latest
