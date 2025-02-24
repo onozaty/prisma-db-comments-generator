@@ -194,6 +194,40 @@ describe("diffComments", () => {
     });
   });
 
+  test("first has columns only", () => {
+    // ARRANGE
+    const first: Comments = {
+      table1: {
+        table: undefined,
+        columns: [
+          {
+            tableName: "table1",
+            columnName: "field1",
+            comment: "field1 comment",
+          },
+        ],
+      },
+    };
+    const second: Comments = {};
+
+    // ACT
+    const comments = diffComments(first, second);
+
+    // ASSERT
+    expect(comments).toStrictEqual({
+      table1: {
+        table: undefined,
+        columns: [
+          {
+            tableName: "table1",
+            columnName: "field1",
+            comment: "field1 comment",
+          },
+        ],
+      },
+    });
+  });
+
   test("empty first", () => {
     // ARRANGE
     const first: Comments = {};
