@@ -94,7 +94,10 @@ const diffTableComments = (
   first: TableComments,
   second?: TableComments,
 ): TableComments | undefined => {
-  const tableDiff = diffComment(first.table!, second?.table);
+  const tableDiff = first.table
+    ? diffComment(first.table!, second?.table)
+    : undefined;
+
   const commentDiffs = first.columns
     ?.map((firstColumn) => {
       // カラムが一致するものを探して比較
