@@ -95,7 +95,7 @@ const diffTableComments = (
   second?: TableComments,
 ): TableComments | undefined => {
   const tableDiff = first.table
-    ? diffComment(first.table!, second?.table)
+    ? diffComment(first.table, second?.table)
     : undefined;
 
   const commentDiffs = first.columns
