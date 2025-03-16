@@ -5,6 +5,10 @@
   "bin": {
     "prisma-db-comments-generator": "./dist/generator.js"
   },
+  "files": [
+    "dist/**/*",
+    "!dist/**/*.test.*"
+  ],
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
