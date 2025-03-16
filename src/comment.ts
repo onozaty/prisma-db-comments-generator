@@ -26,8 +26,15 @@ export type Target = (typeof AllTargets)[number];
 export const createComments = (
   models: readonly Model[],
   targets: readonly Target[],
-  ignorePattern: RegExp | undefined,
-  includeEnumInFieldComment: boolean,
+  {
+    ignorePattern,
+    ignoreCommentPattern,
+    includeEnumInFieldComment,
+  }: {
+    ignorePattern?: RegExp;
+    ignoreCommentPattern?: RegExp;
+    includeEnumInFieldComment: boolean;
+  },
 ): Comments => {
   const comments: Comments = {};
 
@@ -40,7 +47,7 @@ export const createComments = (
       table: targets.includes("table")
         ? {
             tableName: model.dbName,
-            comment: model.documentation ?? "",
+            comment: createModelCommentString(model, ignoreCommentPattern),
           }
         : undefined,
       columns: targets.includes("column")
@@ -50,6 +57,7 @@ export const createComments = (
               columnName: field.dbName,
               comment: createFieldCommentString(
                 field,
+                ignoreCommentPattern,
                 includeEnumInFieldComment,
               ),
             };
@@ -63,15 +71,38 @@ export const createComments = (
 
 const createFieldCommentString = (
   field: Field,
+  ignoreCommentPattern: RegExp | undefined,
   includeEnumInFieldComment: boolean,
 ) => {
   let comment = field.documentation ?? "";
 
+  if (ignoreCommentPattern && ignoreCommentPattern.test(comment)) {
+    return "";
+  }
+
   if (includeEnumInFieldComment && field.typeEnum) {
-    comment += `\nenum: ${field.typeEnum.dbName}(${field.typeEnum.values.join(", ")})`;
+    if (comment !== "") {
+      comment += "\n";
+    }
+    comment += `enum: ${field.typeEnum.dbName}(${field.typeEnum.values.join(", ")})`;
   }
 
   return comment;
+};
+
+const createModelCommentString = (
+  model: Model,
+  ignoreCommentPattern: RegExp | undefined,
+): string => {
+  if (model.documentation === undefined) {
+    return "";
+  }
+
+  if (ignoreCommentPattern && ignoreCommentPattern.test(model.documentation)) {
+    return "";
+  }
+
+  return model.documentation;
 };
 
 export const diffComments = (first: Comments, second: Comments): Comments => {
