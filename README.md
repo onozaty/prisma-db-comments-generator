@@ -182,6 +182,19 @@ generator comments {
 }
 ```
 
+### ignoreCommentPattern
+
+Specify the model to be excluded from making comments as a regular expression with `ignoreCommentPattern`.  
+
+For example, the following excludes comments containing `@TypeGraphQL`.
+
+```prisma
+generator comments {
+  provider             = "prisma-db-comments-generator"
+  ignoreCommentPattern = "@TypeGraphQL"
+}
+```
+
 ### includeEnumInFieldComment
 
 If `includeEnumInFieldComment` is set to true, information about the enum is appended to the column comment.  

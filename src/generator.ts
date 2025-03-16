@@ -42,6 +42,14 @@ const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
     ignorePattern = new RegExp(generator.config.ignorePattern);
   }
 
+  let ignoreCommentPattern;
+  if (
+    generator.config.ignoreCommentPattern &&
+    typeof generator.config.ignoreCommentPattern === "string"
+  ) {
+    ignoreCommentPattern = new RegExp(generator.config.ignoreCommentPattern);
+  }
+
   let includeEnumInFieldComment = false;
   if (
     generator.config.includeEnumInFieldComment &&
@@ -52,12 +60,11 @@ const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
   }
 
   const models = parse(dmmf.datamodel);
-  const currentComments = createComments(
-    models,
-    targets,
+  const currentComments = createComments(models, targets, {
     ignorePattern,
+    ignoreCommentPattern,
     includeEnumInFieldComment,
-  );
+  });
 
   // load latest
   const latestFilePath = path.join(outputDir, "comments-latest.json");
