@@ -10,7 +10,7 @@
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
         "Prisma.prisma",
-        "Orta.vscode-jest"
+        "vitest.explorer"
       ]
     }
   }
