@@ -1,0 +1,86 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
+}
+
+generator comments {
+  provider                  = "node ./dist/generator.cjs"
+  ignorePattern             = "_view$"
+  includeEnumInFieldComment = true
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Product type enumeration
+enum ProductType {
+  BOOK
+  TOY
+  FASHION
+
+  @@map("enum_product_type")
+}
+
+/// Customer
+model Customer {
+  /// Customer ID
+  customerId Int      @id @default(autoincrement()) @map("customer_id")
+  /// Customer Name
+  name       String
+  /// e-mail
+  email      String   @unique
+  createdAt  DateTime @default(dbgenerated("statement_timestamp()")) @map("created_at") @db.Timestamptz()
+  sales      Sale[]
+
+  @@map("customers")
+}
+
+/// Product
+model Product {
+  /// Product ID
+  productId   Int         @id @default(autoincrement()) @map("product_id")
+  /// Product Name
+  name        String
+  /// Product Type
+  type        ProductType
+  /// Product Description
+  description String?
+  /// Price
+  price       Float
+  createdAt   DateTime    @default(dbgenerated("statement_timestamp()")) @map("created_at") @db.Timestamptz()
+  sales       Sale[]
+
+  @@map("products")
+}
+
+model Sale {
+  /// Sale ID
+  saleId     Int      @id @default(autoincrement()) @map("sale_id")
+  customer   Customer @relation(fields: [customerId], references: [customerId])
+  /// Customer ID
+  customerId Int      @map("customer_id")
+  product    Product  @relation(fields: [productId], references: [productId])
+  /// Product ID
+  productId  Int      @map("product_id")
+  /// Quantity
+  quantity   Int
+  /// Total Price
+  totalPrice Float    @map("total_price")
+  createdAt  DateTime @default(dbgenerated("statement_timestamp()")) @map("created_at") @db.Timestamptz()
+
+  @@map("sales")
+}
+
+/// Customer Sale Summary View
+view CustomerSaleSummaryView {
+  /// Customer ID
+  customerId         Int    @id @map("customer_id")
+  /// Customer Name
+  name               String
+  /// Total
+  totalPurchasePrice Int    @map("total_purchase_price")
+
+  @@map("customer_sale_summaries_view")
+}

@@ -9,18 +9,18 @@ importers:
   .:
     dependencies:
       '@prisma/generator-helper':
-        specifier: ^6.0.0
+        specifier: ^5.0.0 || ^6.0.0
         version: 6.8.2
       '@prisma/internals':
-        specifier: ^6.0.0
+        specifier: ^5.0.0 || ^6.0.0
         version: 6.8.2(typescript@5.8.3)
     devDependencies:
       '@eslint/js':
         specifier: ^9.28.0
         version: 9.28.0
       '@prisma/client':
-        specifier: ^5.0.0
-        version: 5.22.0(prisma@6.8.2(typescript@5.8.3))
+        specifier: ^6.0.0
+        version: 6.9.0(prisma@6.8.2(typescript@5.8.3))(typescript@5.8.3)
       '@types/node':
         specifier: ^22.0.0
         version: 22.15.29
@@ -470,13 +470,16 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@prisma/client@5.22.0':
-    resolution: {integrity: sha512-M0SVXfyHnQREBKxCgyo7sffrKttwE6R8PMq330MIUF0pTwjUhLbW84pFDlf06B27XyCR++VtjugEnIHdr07SVA==}
-    engines: {node: '>=16.13'}
+  '@prisma/client@6.9.0':
+    resolution: {integrity: sha512-Gg7j1hwy3SgF1KHrh0PZsYvAaykeR0PaxusnLXydehS96voYCGt1U5zVR31NIouYc63hWzidcrir1a7AIyCsNQ==}
+    engines: {node: '>=18.18'}
     peerDependencies:
       prisma: '*'
+      typescript: '>=5.1.0'
     peerDependenciesMeta:
       prisma:
+        optional: true
+      typescript:
         optional: true
 
   '@prisma/config@6.8.2':
@@ -1734,9 +1737,10 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@prisma/client@5.22.0(prisma@6.8.2(typescript@5.8.3))':
+  '@prisma/client@6.9.0(prisma@6.8.2(typescript@5.8.3))(typescript@5.8.3)':
     optionalDependencies:
       prisma: 6.8.2(typescript@5.8.3)
+      typescript: 5.8.3
 
   '@prisma/config@6.8.2':
     dependencies:

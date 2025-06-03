@@ -2,3 +2,4 @@
 dist/
 prisma/migrations/
 coverage/
+src/__fixtures__/**/migrations/

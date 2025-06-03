@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator comments {
+  provider                  = "node ./dist/generator.cjs"
+  includeEnumInFieldComment = true
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Product type enumeration
+enum ProductType {
+  BOOK
+  TOY
+  FASHION
+
+  @@map("enum_product_type")
+}
+
+model Product {
+  /// Product ID
+  productId   Int         @id @default(autoincrement()) @map("product_id")
+  /// Product Name
+  name        String
+  /// Product Type
+  type        ProductType
+  /// Product Description
+  description String?
+  /// Price
+  price       Float
+  createdAt   DateTime    @default(dbgenerated("statement_timestamp()")) @map("created_at") @db.Timestamptz()
+  sales       Sale[]
+  Shop        Shop?       @relation(fields: [shopShopId], references: [shopId])
+  shopShopId  Int?
+
+  @@map("products")
+}
+
+/// Sale
+model Sale {
+  /// Sale ID
+  saleId     Int      @id @default(autoincrement()) @map("sale_id")
+  product    Product  @relation(fields: [productId], references: [productId])
+  productId  Int      @map("product_id")
+  /// Quantity
+  quantity   Int
+  /// Total Price X
+  totalPrice Float    @map("total_price")
+  createdAt  DateTime @default(dbgenerated("statement_timestamp()")) @map("created_at") @db.Timestamptz()
+
+  @@map("sales")
+}
+
+/// Shop
+model Shop {
+  /// Shop ID
+  shopId    Int       @id @default(autoincrement()) @map("shop_id")
+  /// Shop Name
+  name      String    @unique
+  /// Created At
+  createdAt DateTime  @default(dbgenerated("statement_timestamp()")) @map("created_at") @db.Timestamptz()
+  products  Product[]
+
+  @@map("shops")
+}
