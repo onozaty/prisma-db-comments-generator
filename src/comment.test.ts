@@ -62,38 +62,24 @@ describe("createComments", () => {
     // ASSERT
     expect(comments).toStrictEqual({
       table1: {
-        table: {
-          tableName: "table1",
-          comment: "table1 comment",
-        },
+        table: { tableName: "table1", comment: "table1 comment" },
         columns: [
           {
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field2",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field2", comment: "" },
           {
             tableName: "table1",
             columnName: "field3",
             comment: "field3 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field4",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field4", comment: "" },
         ],
       },
       table2: {
-        table: {
-          tableName: "table2",
-          comment: "",
-        },
+        table: { tableName: "table2", comment: "" },
         columns: [
           {
             tableName: "table2",
@@ -146,21 +132,14 @@ describe("createComments", () => {
     // ASSERT
     expect(comments).toStrictEqual({
       table1: {
-        table: {
-          tableName: "table1",
-          comment: "table1 comment",
-        },
+        table: { tableName: "table1", comment: "table1 comment" },
         columns: [
           {
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field2",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field2", comment: "" },
           {
             tableName: "table1",
             columnName: "field3",
@@ -221,10 +200,7 @@ describe("createComments", () => {
     // ASSERT
     expect(comments).toStrictEqual({
       table2: {
-        table: {
-          tableName: "table2",
-          comment: "",
-        },
+        table: { tableName: "table2", comment: "" },
         columns: [
           {
             tableName: "table2",
@@ -282,38 +258,20 @@ describe("createComments", () => {
     // ASSERT
     expect(comments).toStrictEqual({
       table1: {
-        table: {
-          tableName: "table1",
-          comment: "table1 comment",
-        },
+        table: { tableName: "table1", comment: "table1 comment" },
         columns: [
-          {
-            tableName: "table1",
-            columnName: "field1",
-            comment: "",
-          },
-          {
-            tableName: "table1",
-            columnName: "field2",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field1", comment: "" },
+          { tableName: "table1", columnName: "field2", comment: "" },
           {
             tableName: "table1",
             columnName: "field3",
             comment: "field3 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field4",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field4", comment: "" },
         ],
       },
       table2: {
-        table: {
-          tableName: "table2",
-          comment: "",
-        },
+        table: { tableName: "table2", comment: "" },
         columns: [
           {
             tableName: "table2",
@@ -343,38 +301,24 @@ describe("diffComments", () => {
     // ARRANGE
     const first: Comments = {
       table1: {
-        table: {
-          tableName: "table1",
-          comment: "table1 comment",
-        },
+        table: { tableName: "table1", comment: "table1 comment" },
         columns: [
           {
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field2",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field2", comment: "" },
           {
             tableName: "table1",
             columnName: "field3",
             comment: "field3 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field4",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field4", comment: "" },
         ],
       },
       table2: {
-        table: {
-          tableName: "table2",
-          comment: "",
-        },
+        table: { tableName: "table2", comment: "" },
         columns: [
           {
             tableName: "table2",
@@ -392,10 +336,7 @@ describe("diffComments", () => {
     // ASSERT
     expect(comments).toStrictEqual({
       table1: {
-        table: {
-          tableName: "table1",
-          comment: "table1 comment",
-        },
+        table: { tableName: "table1", comment: "table1 comment" },
         columns: [
           {
             tableName: "table1",
@@ -461,38 +402,24 @@ describe("diffComments", () => {
     const first: Comments = {};
     const second: Comments = {
       table1: {
-        table: {
-          tableName: "table1",
-          comment: "table1 comment",
-        },
+        table: { tableName: "table1", comment: "table1 comment" },
         columns: [
           {
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field2",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field2", comment: "" },
           {
             tableName: "table1",
             columnName: "field3",
             comment: "field3 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field4",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field4", comment: "" },
         ],
       },
       table2: {
-        table: {
-          tableName: "table2",
-          comment: "",
-        },
+        table: { tableName: "table2", comment: "" },
         columns: [
           {
             tableName: "table2",
@@ -514,38 +441,24 @@ describe("diffComments", () => {
     // ARRANGE
     const first: Comments = {
       table1: {
-        table: {
-          tableName: "table1",
-          comment: "table1 comment",
-        },
+        table: { tableName: "table1", comment: "table1 comment" },
         columns: [
           {
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field2",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field2", comment: "" },
           {
             tableName: "table1",
             columnName: "field3",
             comment: "field3 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field4",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field4", comment: "" },
         ],
       },
       table2: {
-        table: {
-          tableName: "table2",
-          comment: "",
-        },
+        table: { tableName: "table2", comment: "" },
         columns: [
           {
             tableName: "table2",
@@ -557,38 +470,24 @@ describe("diffComments", () => {
     };
     const second: Comments = {
       table1: {
-        table: {
-          tableName: "table1",
-          comment: "table1 comment",
-        },
+        table: { tableName: "table1", comment: "table1 comment" },
         columns: [
           {
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field2",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field2", comment: "" },
           {
             tableName: "table1",
             columnName: "field3",
             comment: "field3 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field4",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field4", comment: "" },
         ],
       },
       table2: {
-        table: {
-          tableName: "table2",
-          comment: "",
-        },
+        table: { tableName: "table2", comment: "" },
         columns: [
           {
             tableName: "table2",
@@ -610,38 +509,20 @@ describe("diffComments", () => {
     // ARRANGE
     const first: Comments = {
       table1: {
-        table: {
-          tableName: "table1",
-          comment: "table1 comment",
-        },
+        table: { tableName: "table1", comment: "table1 comment" },
         columns: [
           {
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment xxx",
           },
-          {
-            tableName: "table1",
-            columnName: "field2",
-            comment: "xxx",
-          },
-          {
-            tableName: "table1",
-            columnName: "field3",
-            comment: "",
-          },
-          {
-            tableName: "table1",
-            columnName: "field4",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field2", comment: "xxx" },
+          { tableName: "table1", columnName: "field3", comment: "" },
+          { tableName: "table1", columnName: "field4", comment: "" },
         ],
       },
       table2: {
-        table: {
-          tableName: "table2",
-          comment: "xxx",
-        },
+        table: { tableName: "table2", comment: "xxx" },
         columns: [
           {
             tableName: "table2",
@@ -653,38 +534,24 @@ describe("diffComments", () => {
     };
     const second: Comments = {
       table1: {
-        table: {
-          tableName: "table1",
-          comment: "table1 comment",
-        },
+        table: { tableName: "table1", comment: "table1 comment" },
         columns: [
           {
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field2",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field2", comment: "" },
           {
             tableName: "table1",
             columnName: "field3",
             comment: "field3 comment",
           },
-          {
-            tableName: "table1",
-            columnName: "field4",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field4", comment: "" },
         ],
       },
       table2: {
-        table: {
-          tableName: "table2",
-          comment: "",
-        },
+        table: { tableName: "table2", comment: "" },
         columns: [
           {
             tableName: "table2",
@@ -708,25 +575,11 @@ describe("diffComments", () => {
             columnName: "field1",
             comment: "field1 comment xxx",
           },
-          {
-            tableName: "table1",
-            columnName: "field2",
-            comment: "xxx",
-          },
-          {
-            tableName: "table1",
-            columnName: "field3",
-            comment: "",
-          },
+          { tableName: "table1", columnName: "field2", comment: "xxx" },
+          { tableName: "table1", columnName: "field3", comment: "" },
         ],
       },
-      table2: {
-        table: {
-          tableName: "table2",
-          comment: "xxx",
-        },
-        columns: [],
-      },
+      table2: { table: { tableName: "table2", comment: "xxx" }, columns: [] },
     });
   });
 });
