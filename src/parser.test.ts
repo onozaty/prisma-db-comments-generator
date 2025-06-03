@@ -3,7 +3,7 @@ import { parse } from "./parser";
 
 describe("parse", () => {
   test("returns empty array for empty datamodel", () => {
-    // ARRANGE
+    // Arrange
     const datamodel: DMMF.Datamodel = {
       enums: [],
       models: [],
@@ -11,15 +11,15 @@ describe("parse", () => {
       indexes: [],
     };
 
-    // ACT
+    // Act
     const result = parse(datamodel);
 
-    // ASSERT
+    // Assert
     expect(result).toEqual([]);
   });
 
   test("parses model with enum fields correctly", () => {
-    // ARRANGE
+    // Arrange
     const datamodel: DMMF.Datamodel = {
       enums: [
         {
@@ -73,10 +73,10 @@ describe("parse", () => {
       indexes: [],
     };
 
-    // ACT
+    // Act
     const result = parse(datamodel);
 
-    // ASSERT
+    // Assert
     expect(result).toEqual([
       {
         dbName: "users",
@@ -103,7 +103,7 @@ describe("parse", () => {
   });
 
   test("uses name as dbName when dbName is not specified", () => {
-    // ARRANGE
+    // Arrange
     const datamodel: DMMF.Datamodel = {
       enums: [
         {
@@ -152,10 +152,10 @@ describe("parse", () => {
       indexes: [],
     };
 
-    // ACT
+    // Act
     const result = parse(datamodel);
 
-    // ASSERT
+    // Assert
     expect(result).toEqual([
       {
         dbName: "Post",

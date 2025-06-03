@@ -3,18 +3,18 @@ import { generateCommentStatements } from "./statement";
 
 describe("generateCommentStatements", () => {
   test("empty comments", () => {
-    // ARRANGE
+    // Arrange
     const comments: Comments = {};
 
-    // ACT
+    // Act
     const statements = generateCommentStatements(comments);
 
-    // ASSERT
+    // Assert
     expect(statements).toStrictEqual([]);
   });
 
   test("only table comment", () => {
-    // ARRANGE
+    // Arrange
     const comments: Comments = {
       users: {
         table: {
@@ -25,10 +25,10 @@ describe("generateCommentStatements", () => {
       },
     };
 
-    // ACT
+    // Act
     const statements = generateCommentStatements(comments);
 
-    // ASSERT
+    // Assert
     expect(statements).toStrictEqual([
       "-- users comments",
       `COMMENT ON TABLE "users" IS 'ユーザーテーブル';`,
@@ -37,7 +37,7 @@ describe("generateCommentStatements", () => {
   });
 
   test("only column comments", () => {
-    // ARRANGE
+    // Arrange
     const comments: Comments = {
       users: {
         table: undefined,
@@ -56,10 +56,10 @@ describe("generateCommentStatements", () => {
       },
     };
 
-    // ACT
+    // Act
     const statements = generateCommentStatements(comments);
 
-    // ASSERT
+    // Assert
     expect(statements).toStrictEqual([
       "-- users comments",
       `COMMENT ON COLUMN "users"."id" IS 'ユーザーID';`,
@@ -69,7 +69,7 @@ describe("generateCommentStatements", () => {
   });
 
   test("both table and column comments", () => {
-    // ARRANGE
+    // Arrange
     const comments: Comments = {
       users: {
         table: {
@@ -91,10 +91,10 @@ describe("generateCommentStatements", () => {
       },
     };
 
-    // ACT
+    // Act
     const statements = generateCommentStatements(comments);
 
-    // ASSERT
+    // Assert
     expect(statements).toStrictEqual([
       "-- users comments",
       `COMMENT ON TABLE "users" IS 'ユーザーテーブル';`,
@@ -105,7 +105,7 @@ describe("generateCommentStatements", () => {
   });
 
   test("multiple tables", () => {
-    // ARRANGE
+    // Arrange
     const comments: Comments = {
       users: {
         table: {
@@ -135,10 +135,10 @@ describe("generateCommentStatements", () => {
       },
     };
 
-    // ACT
+    // Act
     const statements = generateCommentStatements(comments);
 
-    // ASSERT
+    // Assert
     expect(statements).toStrictEqual([
       "-- users comments",
       `COMMENT ON TABLE "users" IS 'ユーザーテーブル';`,
@@ -152,7 +152,7 @@ describe("generateCommentStatements", () => {
   });
 
   test("comments with special characters", () => {
-    // ARRANGE
+    // Arrange
     const comments: Comments = {
       users: {
         table: {
@@ -169,10 +169,10 @@ describe("generateCommentStatements", () => {
       },
     };
 
-    // ACT
+    // Act
     const statements = generateCommentStatements(comments);
 
-    // ASSERT
+    // Assert
     expect(statements).toStrictEqual([
       "-- users comments",
       `COMMENT ON TABLE "users" IS 'User''s table';`,
@@ -182,7 +182,7 @@ describe("generateCommentStatements", () => {
   });
 
   test("treat empty comments as NULL", () => {
-    // ARRANGE
+    // Arrange
     const comments: Comments = {
       users: {
         table: {
@@ -199,10 +199,10 @@ describe("generateCommentStatements", () => {
       },
     };
 
-    // ACT
+    // Act
     const statements = generateCommentStatements(comments);
 
-    // ASSERT
+    // Assert
     expect(statements).toStrictEqual([
       "-- users comments",
       `COMMENT ON TABLE "users" IS NULL;`,
