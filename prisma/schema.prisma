@@ -4,7 +4,7 @@ generator client {
 }
 
 generator comments {
-  provider                  = "node ./dist/generator.js"
+  provider                  = "node ./dist/generator.cjs"
   ignorePattern             = "_view$"
   includeEnumInFieldComment = true
 }

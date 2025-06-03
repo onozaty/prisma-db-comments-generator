@@ -2,15 +2,16 @@
   "name": "@onozaty/prisma-db-comments-generator",
   "version": "1.1.0",
   "description": "Generate database comments from Prisma schema",
+  "type": "module",
   "bin": {
-    "prisma-db-comments-generator": "./dist/generator.js"
+    "prisma-db-comments-generator": "./dist/generator.cjs"
   },
   "files": [
     "dist/**/*",
     "!dist/**/*.test.*"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist/ && node build.js",
     "prepare": "pnpm run build",
     "format": "prettier --write src/**",
     "lint": "eslint src/**",
@@ -41,17 +42,17 @@
     "@types/node": "^22.0.0",
     "@vitest/coverage-v8": "^3.2.0",
     "@vitest/eslint-plugin": "^1.2.1",
+    "esbuild": "^0.25.5",
     "eslint": "^9.28.0",
     "globals": "^15.8.0",
     "prettier": "^3.3.3",
-    "prisma": "^5.0.0",
-    "tsx": "^4.16.2",
+    "prisma": "^6.0.0",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.33.1",
     "vitest": "^3.2.0"
   },
   "dependencies": {
-    "@prisma/generator-helper": "^5.0.0",
-    "@prisma/internals": "^5.0.0"
+    "@prisma/generator-helper": "^6.0.0",
+    "@prisma/internals": "^6.0.0"
   }
 }
