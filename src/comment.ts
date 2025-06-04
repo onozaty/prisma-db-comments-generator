@@ -10,11 +10,13 @@ export type TableComments = {
 };
 
 export type TableComment = {
+  schema?: string;
   tableName: string;
   comment: string;
 };
 
 export type ColumnComment = {
+  schema?: string;
   tableName: string;
   columnName: string;
   comment: string;
@@ -43,9 +45,10 @@ export const createComments = (
       continue;
     }
 
-    comments[model.dbName] = {
+    comments[`${model.schema ? model.schema + "." : ""}${model.dbName}`] = {
       table: targets.includes("table")
         ? {
+            schema: model.schema,
             tableName: model.dbName,
             comment: createModelCommentString(model, ignoreCommentPattern),
           }
@@ -53,6 +56,7 @@ export const createComments = (
       columns: targets.includes("column")
         ? model.fields.map((field) => {
             return {
+              schema: model.schema,
               tableName: model.dbName,
               columnName: field.dbName,
               comment: createFieldCommentString(

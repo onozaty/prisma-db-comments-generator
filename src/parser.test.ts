@@ -180,4 +180,57 @@ describe("parse", () => {
       },
     ]);
   });
+
+  test("parses model with different schema correctly", () => {
+    // Arrange
+    const datamodel: DMMF.Datamodel = {
+      enums: [],
+      models: [
+        {
+          name: "Product",
+          dbName: "products",
+          primaryKey: null,
+          schema: "shop",
+          uniqueFields: [],
+          uniqueIndexes: [],
+          fields: [
+            {
+              name: "id",
+              kind: "scalar",
+              type: "Int",
+              documentation: "商品ID",
+              isRequired: true,
+              isList: false,
+              isUnique: true,
+              isId: true,
+              isReadOnly: false,
+              hasDefaultValue: false,
+            },
+          ],
+          documentation: "商品モデル",
+        },
+      ],
+      types: [],
+      indexes: [],
+    };
+
+    // Act
+    const result = parse(datamodel);
+
+    // Assert
+    expect(result).toEqual([
+      {
+        schema: "shop",
+        dbName: "products",
+        documentation: "商品モデル",
+        fields: [
+          {
+            dbName: "id",
+            documentation: "商品ID",
+            typeEnum: undefined,
+          },
+        ],
+      },
+    ]);
+  });
 });

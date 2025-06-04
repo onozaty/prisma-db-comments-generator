@@ -1,0 +1,27 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["foo", "bar"]
+}
+
+generator comments {
+  provider = "node ./dist/generator.cjs"
+}
+
+/// A registered user
+model User {
+  id BigInt @id @map(name: "id") /// Primary key
+
+  username  String @map(name: "username") /// Username used to login
+  firstname String @map(name: "firstname") /// User's firstname
+  lastname  String @map(name: "lastname") /// User's lastname
+  email     String @unique @map(name: "email") /// Email address
+
+  @@map("registered_user")
+  @@schema("foo")
+}
