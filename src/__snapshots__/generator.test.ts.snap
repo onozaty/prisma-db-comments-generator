@@ -1,0 +1,410 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`basic > comments-latest.json 1`] = `
+"{
+  "customers": {
+    "table": {
+      "tableName": "customers",
+      "comment": "Customer"
+    },
+    "columns": [
+      {
+        "tableName": "customers",
+        "columnName": "customer_id",
+        "comment": "Customer ID"
+      },
+      {
+        "tableName": "customers",
+        "columnName": "name",
+        "comment": "Customer Name"
+      },
+      {
+        "tableName": "customers",
+        "columnName": "email",
+        "comment": "e-mail"
+      },
+      {
+        "tableName": "customers",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  },
+  "products": {
+    "table": {
+      "tableName": "products",
+      "comment": "Product"
+    },
+    "columns": [
+      {
+        "tableName": "products",
+        "columnName": "product_id",
+        "comment": "Product ID"
+      },
+      {
+        "tableName": "products",
+        "columnName": "name",
+        "comment": "Product Name"
+      },
+      {
+        "tableName": "products",
+        "columnName": "type",
+        "comment": "Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION)"
+      },
+      {
+        "tableName": "products",
+        "columnName": "description",
+        "comment": "Product Description"
+      },
+      {
+        "tableName": "products",
+        "columnName": "price",
+        "comment": "Price"
+      },
+      {
+        "tableName": "products",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  },
+  "sales": {
+    "table": {
+      "tableName": "sales",
+      "comment": ""
+    },
+    "columns": [
+      {
+        "tableName": "sales",
+        "columnName": "sale_id",
+        "comment": "Sale ID"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "customer_id",
+        "comment": "Customer ID"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "product_id",
+        "comment": "Product ID"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "quantity",
+        "comment": "Quantity"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "total_price",
+        "comment": "Total Price"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  }
+}"
+`;
+
+exports[`basic > migration.sql 1`] = `
+"
+-- customers comments
+COMMENT ON TABLE "customers" IS 'Customer';
+COMMENT ON COLUMN "customers"."customer_id" IS 'Customer ID';
+COMMENT ON COLUMN "customers"."name" IS 'Customer Name';
+COMMENT ON COLUMN "customers"."email" IS 'e-mail';
+
+-- products comments
+COMMENT ON TABLE "products" IS 'Product';
+COMMENT ON COLUMN "products"."product_id" IS 'Product ID';
+COMMENT ON COLUMN "products"."name" IS 'Product Name';
+COMMENT ON COLUMN "products"."type" IS E'Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION)';
+COMMENT ON COLUMN "products"."description" IS 'Product Description';
+COMMENT ON COLUMN "products"."price" IS 'Price';
+
+-- sales comments
+COMMENT ON COLUMN "sales"."sale_id" IS 'Sale ID';
+COMMENT ON COLUMN "sales"."customer_id" IS 'Customer ID';
+COMMENT ON COLUMN "sales"."product_id" IS 'Product ID';
+COMMENT ON COLUMN "sales"."quantity" IS 'Quantity';
+COMMENT ON COLUMN "sales"."total_price" IS 'Total Price';
+"
+`;
+
+exports[`diff > comments-latest.json 1`] = `
+"{
+  "products": {
+    "table": {
+      "tableName": "products",
+      "comment": ""
+    },
+    "columns": [
+      {
+        "tableName": "products",
+        "columnName": "product_id",
+        "comment": "Product ID"
+      },
+      {
+        "tableName": "products",
+        "columnName": "name",
+        "comment": "Product Name"
+      },
+      {
+        "tableName": "products",
+        "columnName": "type",
+        "comment": "Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION)"
+      },
+      {
+        "tableName": "products",
+        "columnName": "description",
+        "comment": "Product Description"
+      },
+      {
+        "tableName": "products",
+        "columnName": "price",
+        "comment": "Price"
+      },
+      {
+        "tableName": "products",
+        "columnName": "created_at",
+        "comment": ""
+      },
+      {
+        "tableName": "products",
+        "columnName": "shopShopId",
+        "comment": ""
+      }
+    ]
+  },
+  "sales": {
+    "table": {
+      "tableName": "sales",
+      "comment": "Sale"
+    },
+    "columns": [
+      {
+        "tableName": "sales",
+        "columnName": "sale_id",
+        "comment": "Sale ID"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "product_id",
+        "comment": ""
+      },
+      {
+        "tableName": "sales",
+        "columnName": "quantity",
+        "comment": "Quantity"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "total_price",
+        "comment": "Total Price X"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  },
+  "shops": {
+    "table": {
+      "tableName": "shops",
+      "comment": "Shop"
+    },
+    "columns": [
+      {
+        "tableName": "shops",
+        "columnName": "shop_id",
+        "comment": "Shop ID"
+      },
+      {
+        "tableName": "shops",
+        "columnName": "name",
+        "comment": "Shop Name"
+      },
+      {
+        "tableName": "shops",
+        "columnName": "created_at",
+        "comment": "Created At"
+      }
+    ]
+  }
+}"
+`;
+
+exports[`diff > migration.sql 1`] = `
+"
+-- products comments
+COMMENT ON TABLE "products" IS NULL;
+
+-- sales comments
+COMMENT ON TABLE "sales" IS 'Sale';
+COMMENT ON COLUMN "sales"."product_id" IS NULL;
+COMMENT ON COLUMN "sales"."total_price" IS 'Total Price X';
+
+-- shops comments
+COMMENT ON TABLE "shops" IS 'Shop';
+COMMENT ON COLUMN "shops"."shop_id" IS 'Shop ID';
+COMMENT ON COLUMN "shops"."name" IS 'Shop Name';
+COMMENT ON COLUMN "shops"."created_at" IS 'Created At';
+"
+`;
+
+exports[`target-column > comments-latest.json 1`] = `
+"{
+  "customers": {
+    "columns": [
+      {
+        "tableName": "customers",
+        "columnName": "customer_id",
+        "comment": "Customer ID"
+      },
+      {
+        "tableName": "customers",
+        "columnName": "name",
+        "comment": "Customer Name"
+      },
+      {
+        "tableName": "customers",
+        "columnName": "email",
+        "comment": "e-mail"
+      },
+      {
+        "tableName": "customers",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  },
+  "products": {
+    "columns": [
+      {
+        "tableName": "products",
+        "columnName": "product_id",
+        "comment": "Product ID"
+      },
+      {
+        "tableName": "products",
+        "columnName": "name",
+        "comment": "Product Name"
+      },
+      {
+        "tableName": "products",
+        "columnName": "type",
+        "comment": "Product Type"
+      },
+      {
+        "tableName": "products",
+        "columnName": "description",
+        "comment": "Product Description"
+      },
+      {
+        "tableName": "products",
+        "columnName": "price",
+        "comment": "Price"
+      },
+      {
+        "tableName": "products",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  },
+  "sales": {
+    "columns": [
+      {
+        "tableName": "sales",
+        "columnName": "sale_id",
+        "comment": "Sale ID"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "customer_id",
+        "comment": "Customer ID"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "product_id",
+        "comment": "Product ID"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "quantity",
+        "comment": "Quantity"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "total_price",
+        "comment": "Total Price"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  }
+}"
+`;
+
+exports[`target-column > migration.sql 1`] = `
+"
+-- customers comments
+COMMENT ON COLUMN "customers"."customer_id" IS 'Customer ID';
+COMMENT ON COLUMN "customers"."name" IS 'Customer Name';
+COMMENT ON COLUMN "customers"."email" IS 'e-mail';
+
+-- products comments
+COMMENT ON COLUMN "products"."product_id" IS 'Product ID';
+COMMENT ON COLUMN "products"."name" IS 'Product Name';
+COMMENT ON COLUMN "products"."type" IS 'Product Type';
+COMMENT ON COLUMN "products"."description" IS 'Product Description';
+COMMENT ON COLUMN "products"."price" IS 'Price';
+
+-- sales comments
+COMMENT ON COLUMN "sales"."sale_id" IS 'Sale ID';
+COMMENT ON COLUMN "sales"."customer_id" IS 'Customer ID';
+COMMENT ON COLUMN "sales"."product_id" IS 'Product ID';
+COMMENT ON COLUMN "sales"."quantity" IS 'Quantity';
+COMMENT ON COLUMN "sales"."total_price" IS 'Total Price';
+"
+`;
+
+exports[`target-table > comments-latest.json 1`] = `
+"{
+  "customers": {
+    "table": {
+      "tableName": "customers",
+      "comment": "Customer"
+    }
+  },
+  "products": {
+    "table": {
+      "tableName": "products",
+      "comment": "Product"
+    }
+  },
+  "sales": {
+    "table": {
+      "tableName": "sales",
+      "comment": ""
+    }
+  }
+}"
+`;
+
+exports[`target-table > migration.sql 1`] = `
+"
+-- customers comments
+COMMENT ON TABLE "customers" IS 'Customer';
+
+-- products comments
+COMMENT ON TABLE "products" IS 'Product';
+"
+`;

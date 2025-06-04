@@ -3,22 +3,22 @@ import { Model } from "./parser";
 
 describe("createComments", () => {
   test("empty", () => {
-    // ARRANGE
+    // Arrange
     const models: Model[] = [];
 
-    // ACT
+    // Act
     const comments = createComments(models, AllTargets, {
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: false,
     });
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({});
   });
 
   test("normal", () => {
-    // ARRANGE
+    // Arrange
     const models: Model[] = [
       {
         dbName: "table1",
@@ -52,14 +52,14 @@ describe("createComments", () => {
       },
     ];
 
-    // ACT
+    // Act
     const comments = createComments(models, AllTargets, {
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: false,
     });
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       table1: {
         table: { tableName: "table1", comment: "table1 comment" },
@@ -92,7 +92,7 @@ describe("createComments", () => {
   });
 
   test("includeEnumInFieldComment", () => {
-    // ARRANGE
+    // Arrange
     const models: Model[] = [
       {
         dbName: "table1",
@@ -122,14 +122,14 @@ describe("createComments", () => {
       },
     ];
 
-    // ACT
+    // Act
     const comments = createComments(models, AllTargets, {
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: true,
     });
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       table1: {
         table: { tableName: "table1", comment: "table1 comment" },
@@ -156,7 +156,7 @@ describe("createComments", () => {
   });
 
   test("ignorePattern", () => {
-    // ARRANGE
+    // Arrange
     const models: Model[] = [
       {
         dbName: "table1",
@@ -190,14 +190,14 @@ describe("createComments", () => {
       },
     ];
 
-    // ACT
+    // Act
     const comments = createComments(models, AllTargets, {
       ignorePattern: /table1/,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: false,
     });
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       table2: {
         table: { tableName: "table2", comment: "" },
@@ -213,7 +213,7 @@ describe("createComments", () => {
   });
 
   test("ignoreCommentPattern", () => {
-    // ARRANGE
+    // Arrange
     const models: Model[] = [
       {
         dbName: "table1",
@@ -248,14 +248,14 @@ describe("createComments", () => {
       },
     ];
 
-    // ACT
+    // Act
     const comments = createComments(models, AllTargets, {
       ignorePattern: undefined,
       ignoreCommentPattern: /field1|table2/,
       includeEnumInFieldComment: false,
     });
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       table1: {
         table: { tableName: "table1", comment: "table1 comment" },
@@ -284,7 +284,7 @@ describe("createComments", () => {
   });
 
   test("creates comments for table target only", () => {
-    // ARRANGE
+    // Arrange
     const models: Model[] = [
       {
         dbName: "table1",
@@ -296,14 +296,14 @@ describe("createComments", () => {
       },
     ];
 
-    // ACT
+    // Act
     const comments = createComments(models, ["table"], {
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: false,
     });
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       table1: {
         table: { tableName: "table1", comment: "table1 comment" },
@@ -313,7 +313,7 @@ describe("createComments", () => {
   });
 
   test("creates comments for column target only", () => {
-    // ARRANGE
+    // Arrange
     const models: Model[] = [
       {
         dbName: "table1",
@@ -325,14 +325,14 @@ describe("createComments", () => {
       },
     ];
 
-    // ACT
+    // Act
     const comments = createComments(models, ["column"], {
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: false,
     });
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       table1: {
         table: undefined,
@@ -353,7 +353,7 @@ describe("createComments", () => {
   });
 
   test("combines ignorePattern and includeEnumInFieldComment", () => {
-    // ARRANGE
+    // Arrange
     const models: Model[] = [
       {
         dbName: "ignore_table",
@@ -389,14 +389,14 @@ describe("createComments", () => {
       },
     ];
 
-    // ACT
+    // Act
     const comments = createComments(models, AllTargets, {
       ignorePattern: /^ignore_/,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: true,
     });
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       keep_table: {
         table: { tableName: "keep_table", comment: "should be kept" },
@@ -414,19 +414,19 @@ describe("createComments", () => {
 
 describe("diffComments", () => {
   test("empty", () => {
-    // ARRANGE
+    // Arrange
     const first: Comments = {};
     const second: Comments = {};
 
-    // ACT
+    // Act
     const comments = diffComments(first, second);
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({});
   });
 
   test("empty second", () => {
-    // ARRANGE
+    // Arrange
     const first: Comments = {
       table1: {
         table: { tableName: "table1", comment: "table1 comment" },
@@ -458,10 +458,10 @@ describe("diffComments", () => {
     };
     const second: Comments = {};
 
-    // ACT
+    // Act
     const comments = diffComments(first, second);
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       table1: {
         table: { tableName: "table1", comment: "table1 comment" },
@@ -492,7 +492,7 @@ describe("diffComments", () => {
   });
 
   test("first has columns only", () => {
-    // ARRANGE
+    // Arrange
     const first: Comments = {
       table1: {
         table: undefined,
@@ -507,10 +507,10 @@ describe("diffComments", () => {
     };
     const second: Comments = {};
 
-    // ACT
+    // Act
     const comments = diffComments(first, second);
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       table1: {
         table: undefined,
@@ -526,7 +526,7 @@ describe("diffComments", () => {
   });
 
   test("empty first", () => {
-    // ARRANGE
+    // Arrange
     const first: Comments = {};
     const second: Comments = {
       table1: {
@@ -558,15 +558,15 @@ describe("diffComments", () => {
       },
     };
 
-    // ACT
+    // Act
     const comments = diffComments(first, second);
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({});
   });
 
   test("same", () => {
-    // ARRANGE
+    // Arrange
     const first: Comments = {
       table1: {
         table: { tableName: "table1", comment: "table1 comment" },
@@ -626,15 +626,15 @@ describe("diffComments", () => {
       },
     };
 
-    // ACT
+    // Act
     const comments = diffComments(first, second);
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({});
   });
 
   test("diff", () => {
-    // ARRANGE
+    // Arrange
     const first: Comments = {
       table1: {
         table: { tableName: "table1", comment: "table1 comment" },
@@ -690,10 +690,10 @@ describe("diffComments", () => {
       },
     };
 
-    // ACT
+    // Act
     const comments = diffComments(first, second);
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       table1: {
         table: undefined,
@@ -712,7 +712,7 @@ describe("diffComments", () => {
   });
 
   test("handles new columns in first comments", () => {
-    // ARRANGE
+    // Arrange
     const first: Comments = {
       table1: {
         table: { tableName: "table1", comment: "table1 comment" },
@@ -743,10 +743,10 @@ describe("diffComments", () => {
       },
     };
 
-    // ACT
+    // Act
     const comments = diffComments(first, second);
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       table1: {
         table: undefined,
@@ -762,7 +762,7 @@ describe("diffComments", () => {
   });
 
   test("detects only changed column comments", () => {
-    // ARRANGE
+    // Arrange
     const first: Comments = {
       table1: {
         table: { tableName: "table1", comment: "table1 comment" },
@@ -798,10 +798,10 @@ describe("diffComments", () => {
       },
     };
 
-    // ACT
+    // Act
     const comments = diffComments(first, second);
 
-    // ASSERT
+    // Assert
     expect(comments).toStrictEqual({
       table1: {
         table: undefined,

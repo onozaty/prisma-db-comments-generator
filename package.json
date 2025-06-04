@@ -38,7 +38,7 @@
   "homepage": "https://github.com/onozaty/prisma-db-comments-generator#readme",
   "devDependencies": {
     "@eslint/js": "^9.28.0",
-    "@prisma/client": "^5.0.0",
+    "@prisma/client": "^6.0.0",
     "@types/node": "^22.0.0",
     "@vitest/coverage-v8": "^3.2.0",
     "@vitest/eslint-plugin": "^1.2.1",
@@ -52,7 +52,7 @@
     "vitest": "^3.2.0"
   },
   "dependencies": {
-    "@prisma/generator-helper": "^6.0.0",
-    "@prisma/internals": "^6.0.0"
+    "@prisma/generator-helper": "^5.0.0 || ^6.0.0",
+    "@prisma/internals": "^5.0.0 || ^6.0.0"
   }
 }
