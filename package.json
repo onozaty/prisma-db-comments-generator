@@ -1,6 +1,6 @@
 {
   "name": "@onozaty/prisma-db-comments-generator",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Generate database comments from Prisma schema",
   "type": "module",
   "bin": {
