@@ -81,6 +81,21 @@ test("diff", async () => {
   expect(commentsLatestJsonContent).toMatchSnapshot("comments-latest.json");
 });
 
+test("multi-schema", async () => {
+  // Arrange
+  const name = "multi-schema";
+
+  // Act
+  executeGenerate(name);
+
+  // Assert
+  const migrationSqlContent = readMigrationSql(name);
+  expect(migrationSqlContent).toMatchSnapshot("migration.sql");
+
+  const commentsLatestJsonContent = readCommentsLatestJson(name);
+  expect(commentsLatestJsonContent).toMatchSnapshot("comments-latest.json");
+});
+
 const executeGenerate = (name: string) => {
   const schemaPath = path.join(fixturesDir, name, "schema.prisma");
   child_process.execSync(`npx prisma generate --schema ${schemaPath}`);

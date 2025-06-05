@@ -256,6 +256,62 @@ COMMENT ON COLUMN "shops"."created_at" IS 'Created At';
 "
 `;
 
+exports[`multi-schema > comments-latest.json 1`] = `
+"{
+  "foo.registered_user": {
+    "table": {
+      "schema": "foo",
+      "tableName": "registered_user",
+      "comment": "A registered user"
+    },
+    "columns": [
+      {
+        "schema": "foo",
+        "tableName": "registered_user",
+        "columnName": "id",
+        "comment": "Primary key"
+      },
+      {
+        "schema": "foo",
+        "tableName": "registered_user",
+        "columnName": "username",
+        "comment": "Username used to login"
+      },
+      {
+        "schema": "foo",
+        "tableName": "registered_user",
+        "columnName": "firstname",
+        "comment": "User's firstname"
+      },
+      {
+        "schema": "foo",
+        "tableName": "registered_user",
+        "columnName": "lastname",
+        "comment": "User's lastname"
+      },
+      {
+        "schema": "foo",
+        "tableName": "registered_user",
+        "columnName": "email",
+        "comment": "Email address"
+      }
+    ]
+  }
+}"
+`;
+
+exports[`multi-schema > migration.sql 1`] = `
+"
+-- foo.registered_user comments
+COMMENT ON TABLE "foo"."registered_user" IS 'A registered user';
+COMMENT ON COLUMN "foo"."registered_user"."id" IS 'Primary key';
+COMMENT ON COLUMN "foo"."registered_user"."username" IS 'Username used to login';
+COMMENT ON COLUMN "foo"."registered_user"."firstname" IS 'User''s firstname';
+COMMENT ON COLUMN "foo"."registered_user"."lastname" IS 'User''s lastname';
+COMMENT ON COLUMN "foo"."registered_user"."email" IS 'Email address';
+"
+`;
+
 exports[`target-column > comments-latest.json 1`] = `
 "{
   "customers": {

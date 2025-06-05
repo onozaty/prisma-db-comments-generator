@@ -62,26 +62,43 @@ describe("createComments", () => {
     // Assert
     expect(comments).toStrictEqual({
       table1: {
-        table: { tableName: "table1", comment: "table1 comment" },
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "table1 comment",
+        },
         columns: [
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
-          { tableName: "table1", columnName: "field2", comment: "" },
           {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field2",
+            comment: "",
+          },
+          {
+            schema: undefined,
             tableName: "table1",
             columnName: "field3",
             comment: "field3 comment",
           },
-          { tableName: "table1", columnName: "field4", comment: "" },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field4",
+            comment: "",
+          },
         ],
       },
       table2: {
-        table: { tableName: "table2", comment: "" },
+        table: { schema: undefined, tableName: "table2", comment: "" },
         columns: [
           {
+            schema: undefined,
             tableName: "table2",
             columnName: "fieldA",
             comment: "fieldA comment",
@@ -132,20 +149,32 @@ describe("createComments", () => {
     // Assert
     expect(comments).toStrictEqual({
       table1: {
-        table: { tableName: "table1", comment: "table1 comment" },
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "table1 comment",
+        },
         columns: [
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
-          { tableName: "table1", columnName: "field2", comment: "" },
           {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field2",
+            comment: "",
+          },
+          {
+            schema: undefined,
             tableName: "table1",
             columnName: "field3",
             comment: "field3 comment\nenum: enum1(A, B)",
           },
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field4",
             comment: "enum: enum2(A, B, C)",
@@ -200,9 +229,10 @@ describe("createComments", () => {
     // Assert
     expect(comments).toStrictEqual({
       table2: {
-        table: { tableName: "table2", comment: "" },
+        table: { schema: undefined, tableName: "table2", comment: "" },
         columns: [
           {
+            schema: undefined,
             tableName: "table2",
             columnName: "fieldA",
             comment: "fieldA comment",
@@ -258,22 +288,43 @@ describe("createComments", () => {
     // Assert
     expect(comments).toStrictEqual({
       table1: {
-        table: { tableName: "table1", comment: "table1 comment" },
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "table1 comment",
+        },
         columns: [
-          { tableName: "table1", columnName: "field1", comment: "" },
-          { tableName: "table1", columnName: "field2", comment: "" },
           {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field1",
+            comment: "",
+          },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field2",
+            comment: "",
+          },
+          {
+            schema: undefined,
             tableName: "table1",
             columnName: "field3",
             comment: "field3 comment",
           },
-          { tableName: "table1", columnName: "field4", comment: "" },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field4",
+            comment: "",
+          },
         ],
       },
       table2: {
-        table: { tableName: "table2", comment: "" },
+        table: { schema: undefined, tableName: "table2", comment: "" },
         columns: [
           {
+            schema: undefined,
             tableName: "table2",
             columnName: "fieldA",
             comment: "fieldA comment",
@@ -306,7 +357,11 @@ describe("createComments", () => {
     // Assert
     expect(comments).toStrictEqual({
       table1: {
-        table: { tableName: "table1", comment: "table1 comment" },
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "table1 comment",
+        },
         columns: undefined,
       },
     });
@@ -338,11 +393,13 @@ describe("createComments", () => {
         table: undefined,
         columns: [
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field2",
             comment: "field2 comment",
@@ -399,12 +456,116 @@ describe("createComments", () => {
     // Assert
     expect(comments).toStrictEqual({
       keep_table: {
-        table: { tableName: "keep_table", comment: "should be kept" },
+        table: {
+          schema: undefined,
+          tableName: "keep_table",
+          comment: "should be kept",
+        },
         columns: [
           {
+            schema: undefined,
             tableName: "keep_table",
             columnName: "field1",
             comment: "should include enum\nenum: enum2(X, Y)",
+          },
+        ],
+      },
+    });
+  });
+
+  test("creates comments with schema", () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        schema: "public",
+        dbName: "users",
+        documentation: "ユーザーテーブル",
+        fields: [
+          {
+            dbName: "id",
+            documentation: "ユーザーID",
+          },
+          {
+            dbName: "name",
+            documentation: "ユーザー名",
+          },
+        ],
+      },
+      {
+        schema: "shop",
+        dbName: "products",
+        documentation: "商品テーブル",
+        fields: [
+          {
+            dbName: "id",
+            documentation: "商品ID",
+            typeEnum: {
+              dbName: "product_type",
+              name: "ProductType",
+              values: ["PHYSICAL", "DIGITAL"],
+              documentation: "商品種別",
+            },
+          },
+          {
+            dbName: "status",
+            typeEnum: {
+              dbName: "product_status",
+              name: "ProductStatus",
+              values: ["DRAFT", "PUBLISHED"],
+            },
+          },
+        ],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, AllTargets, {
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      includeEnumInFieldComment: true,
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      "public.users": {
+        table: {
+          schema: "public",
+          tableName: "users",
+          comment: "ユーザーテーブル",
+        },
+        columns: [
+          {
+            schema: "public",
+            tableName: "users",
+            columnName: "id",
+            comment: "ユーザーID",
+          },
+          {
+            schema: "public",
+            tableName: "users",
+            columnName: "name",
+            comment: "ユーザー名",
+          },
+        ],
+      },
+      "shop.products": {
+        table: {
+          schema: "shop",
+          tableName: "products",
+          comment: "商品テーブル",
+        },
+        columns: [
+          {
+            schema: "shop",
+            tableName: "products",
+            columnName: "id",
+            comment: "商品ID\nenum: product_type(PHYSICAL, DIGITAL)",
+          },
+          {
+            schema: "shop",
+            tableName: "products",
+            columnName: "status",
+            comment: "enum: product_status(DRAFT, PUBLISHED)",
           },
         ],
       },
@@ -637,22 +798,43 @@ describe("diffComments", () => {
     // Arrange
     const first: Comments = {
       table1: {
-        table: { tableName: "table1", comment: "table1 comment" },
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "table1 comment",
+        },
         columns: [
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment xxx",
           },
-          { tableName: "table1", columnName: "field2", comment: "xxx" },
-          { tableName: "table1", columnName: "field3", comment: "" },
-          { tableName: "table1", columnName: "field4", comment: "" },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field2",
+            comment: "xxx",
+          },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field3",
+            comment: "",
+          },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field4",
+            comment: "",
+          },
         ],
       },
       table2: {
-        table: { tableName: "table2", comment: "xxx" },
+        table: { schema: undefined, tableName: "table2", comment: "xxx" },
         columns: [
           {
+            schema: undefined,
             tableName: "table2",
             columnName: "fieldA",
             comment: "fieldA comment",
@@ -699,15 +881,29 @@ describe("diffComments", () => {
         table: undefined,
         columns: [
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment xxx",
           },
-          { tableName: "table1", columnName: "field2", comment: "xxx" },
-          { tableName: "table1", columnName: "field3", comment: "" },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field2",
+            comment: "xxx",
+          },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field3",
+            comment: "",
+          },
         ],
       },
-      table2: { table: { tableName: "table2", comment: "xxx" }, columns: [] },
+      table2: {
+        table: { schema: undefined, tableName: "table2", comment: "xxx" },
+        columns: [],
+      },
     });
   });
 
@@ -715,14 +911,20 @@ describe("diffComments", () => {
     // Arrange
     const first: Comments = {
       table1: {
-        table: { tableName: "table1", comment: "table1 comment" },
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "table1 comment",
+        },
         columns: [
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "new_field",
             comment: "new field comment",
@@ -752,6 +954,7 @@ describe("diffComments", () => {
         table: undefined,
         columns: [
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "new_field",
             comment: "new field comment",
@@ -765,14 +968,20 @@ describe("diffComments", () => {
     // Arrange
     const first: Comments = {
       table1: {
-        table: { tableName: "table1", comment: "table1 comment" },
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "table1 comment",
+        },
         columns: [
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment updated",
           },
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field2",
             comment: "field2 unchanged",
@@ -782,14 +991,20 @@ describe("diffComments", () => {
     };
     const second: Comments = {
       table1: {
-        table: { tableName: "table1", comment: "table1 comment" },
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "table1 comment",
+        },
         columns: [
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment",
           },
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field2",
             comment: "field2 unchanged",
@@ -807,6 +1022,7 @@ describe("diffComments", () => {
         table: undefined,
         columns: [
           {
+            schema: undefined,
             tableName: "table1",
             columnName: "field1",
             comment: "field1 comment updated",

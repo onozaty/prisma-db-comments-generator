@@ -18,6 +18,7 @@ describe("generateCommentStatements", () => {
     const comments: Comments = {
       users: {
         table: {
+          schema: undefined,
           tableName: "users",
           comment: "ユーザーテーブル",
         },
@@ -43,11 +44,13 @@ describe("generateCommentStatements", () => {
         table: undefined,
         columns: [
           {
+            schema: undefined,
             tableName: "users",
             columnName: "id",
             comment: "ユーザーID",
           },
           {
+            schema: undefined,
             tableName: "users",
             columnName: "name",
             comment: "ユーザー名",
@@ -73,16 +76,19 @@ describe("generateCommentStatements", () => {
     const comments: Comments = {
       users: {
         table: {
+          schema: undefined,
           tableName: "users",
           comment: "ユーザーテーブル",
         },
         columns: [
           {
+            schema: undefined,
             tableName: "users",
             columnName: "id",
             comment: "ユーザーID",
           },
           {
+            schema: undefined,
             tableName: "users",
             columnName: "name",
             comment: "ユーザー名",
@@ -109,11 +115,13 @@ describe("generateCommentStatements", () => {
     const comments: Comments = {
       users: {
         table: {
+          schema: undefined,
           tableName: "users",
           comment: "ユーザーテーブル",
         },
         columns: [
           {
+            schema: undefined,
             tableName: "users",
             columnName: "id",
             comment: "ユーザーID",
@@ -122,11 +130,13 @@ describe("generateCommentStatements", () => {
       },
       posts: {
         table: {
+          schema: undefined,
           tableName: "posts",
           comment: "投稿テーブル",
         },
         columns: [
           {
+            schema: undefined,
             tableName: "posts",
             columnName: "title",
             comment: "タイトル",
@@ -156,11 +166,13 @@ describe("generateCommentStatements", () => {
     const comments: Comments = {
       users: {
         table: {
+          schema: undefined,
           tableName: "users",
           comment: "User's table",
         },
         columns: [
           {
+            schema: undefined,
             tableName: "users",
             columnName: "description",
             comment: "Line1\nLine2",
@@ -186,11 +198,13 @@ describe("generateCommentStatements", () => {
     const comments: Comments = {
       users: {
         table: {
+          schema: undefined,
           tableName: "users",
           comment: "",
         },
         columns: [
           {
+            schema: undefined,
             tableName: "users",
             columnName: "id",
             comment: "",
@@ -207,6 +221,45 @@ describe("generateCommentStatements", () => {
       "-- users comments",
       `COMMENT ON TABLE "users" IS NULL;`,
       `COMMENT ON COLUMN "users"."id" IS NULL;`,
+      "",
+    ]);
+  });
+
+  test("comments with schema", () => {
+    // Arrange
+    const comments: Comments = {
+      "shop.products": {
+        table: {
+          schema: "shop",
+          tableName: "products",
+          comment: "商品テーブル",
+        },
+        columns: [
+          {
+            schema: "shop",
+            tableName: "products",
+            columnName: "id",
+            comment: "商品ID",
+          },
+          {
+            schema: "shop",
+            tableName: "products",
+            columnName: "name",
+            comment: "商品名",
+          },
+        ],
+      },
+    };
+
+    // Act
+    const statements = generateCommentStatements(comments);
+
+    // Assert
+    expect(statements).toStrictEqual([
+      "-- shop.products comments",
+      `COMMENT ON TABLE "shop"."products" IS '商品テーブル';`,
+      `COMMENT ON COLUMN "shop"."products"."id" IS '商品ID';`,
+      `COMMENT ON COLUMN "shop"."products"."name" IS '商品名';`,
       "",
     ]);
   });

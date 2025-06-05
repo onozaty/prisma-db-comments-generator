@@ -36,6 +36,7 @@ const parseModel = (
   typeEnumMap: Map<string, TypeEnum>,
 ): Model => {
   return {
+    schema: model.schema ?? undefined,
     dbName: model.dbName ?? model.name,
     fields: model.fields
       .filter((x) => x.kind === "scalar" || x.kind === "enum")
@@ -45,6 +46,7 @@ const parseModel = (
 };
 
 export type Model = {
+  schema?: string;
   dbName: string;
   fields: Field[];
   documentation?: string;
