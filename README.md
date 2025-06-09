@@ -1,5 +1,9 @@
 # prisma-db-comments-generator
 
+[![Test](https://github.com/onozaty/prisma-db-comments-generator/actions/workflows/test.yml/badge.svg)](https://github.com/onozaty/prisma-db-comments-generator/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/onozaty/prisma-db-comments-generator/graph/badge.svg?token=406L0D8MI0)](https://codecov.io/gh/onozaty/prisma-db-comments-generator)
+[![npm version](https://badge.fury.io/js/@onozaty%2Fprisma-db-comments-generator.svg)](https://badge.fury.io/js/@onozaty%2Fprisma-db-comments-generator)
+
 Generate database comments from Prisma schema.
 
 It is based on the following code idea. Thank you @Jyrno42 .

@@ -14,7 +14,7 @@
     "build": "rm -rf dist/ && node build.js",
     "prepare": "pnpm run build",
     "format": "prettier --write src/**",
-    "lint": "eslint src/**",
+    "lint": "eslint 'src/**/*.ts' --ignore-pattern 'src/__fixtures__/**'",
     "test": "vitest run",
     "test:cov": "vitest run --coverage",
     "db:migrate": "prisma migrate dev && prisma generate && pnpm run db:deploy",
