@@ -2,7 +2,7 @@ name: Test
 
 on:
   push:
-    branches: [main, 14-add-ci]
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
