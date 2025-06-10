@@ -312,6 +312,182 @@ COMMENT ON COLUMN "foo"."registered_user"."email" IS 'Email address';
 "
 `;
 
+exports[`mysql > comments-latest.json 1`] = `
+"{
+  "customers": {
+    "table": {
+      "tableName": "customers",
+      "comment": "Customer"
+    },
+    "columns": [
+      {
+        "tableName": "customers",
+        "columnName": "customer_id",
+        "comment": "Customer ID"
+      },
+      {
+        "tableName": "customers",
+        "columnName": "name",
+        "comment": "Customer Name"
+      },
+      {
+        "tableName": "customers",
+        "columnName": "email",
+        "comment": "e-mail"
+      },
+      {
+        "tableName": "customers",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  },
+  "products": {
+    "table": {
+      "tableName": "products",
+      "comment": "Product's"
+    },
+    "columns": [
+      {
+        "tableName": "products",
+        "columnName": "product_id",
+        "comment": "Product ID"
+      },
+      {
+        "tableName": "products",
+        "columnName": "name",
+        "comment": "Product Name"
+      },
+      {
+        "tableName": "products",
+        "columnName": "type",
+        "comment": "Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION)"
+      },
+      {
+        "tableName": "products",
+        "columnName": "description",
+        "comment": "Product Description"
+      },
+      {
+        "tableName": "products",
+        "columnName": "price",
+        "comment": "Price"
+      },
+      {
+        "tableName": "products",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  },
+  "sales": {
+    "table": {
+      "tableName": "sales",
+      "comment": ""
+    },
+    "columns": [
+      {
+        "tableName": "sales",
+        "columnName": "sale_id",
+        "comment": "Sale ID"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "customer_id",
+        "comment": "Customer ID"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "product_id",
+        "comment": "Product ID"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "quantity",
+        "comment": "Quantity"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "total_price",
+        "comment": "Total Price"
+      },
+      {
+        "tableName": "sales",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  }
+}"
+`;
+
+exports[`mysql > migration.sql 1`] = `
+"
+-- Stored procedure to update column comments
+DROP PROCEDURE IF EXISTS prisma_update_column_comment;
+
+CREATE PROCEDURE prisma_update_column_comment(
+    IN p_table_name VARCHAR(255),
+    IN p_column_name VARCHAR(255),
+    IN p_comment_text TEXT
+)
+BEGIN
+    DECLARE column_definition TEXT;
+    
+    -- Get current column definition from current database
+    SELECT CONCAT(
+        COLUMN_TYPE,
+        CASE WHEN IS_NULLABLE = 'NO' THEN ' NOT NULL' ELSE ' NULL' END,
+        CASE WHEN COLUMN_DEFAULT IS NOT NULL THEN CONCAT(' DEFAULT ', QUOTE(COLUMN_DEFAULT)) ELSE '' END,
+        CASE WHEN EXTRA != '' THEN CONCAT(' ', EXTRA) ELSE '' END
+    ) INTO column_definition
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+        AND TABLE_NAME = p_table_name
+        AND COLUMN_NAME = p_column_name;
+    
+    -- Build and execute ALTER statement
+    SET @sql = CONCAT(
+        'ALTER TABLE \`', p_table_name, '\`',
+        ' MODIFY COLUMN \`', p_column_name, '\` ',
+        column_definition,
+        CASE 
+            WHEN p_comment_text IS NULL THEN ''
+            ELSE CONCAT(' COMMENT ', QUOTE(p_comment_text))
+        END
+    );
+    
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END;
+
+-- customers comments
+ALTER TABLE \`customers\` COMMENT = 'Customer';
+CALL prisma_update_column_comment('customers', 'customer_id', 'Customer ID');
+CALL prisma_update_column_comment('customers', 'name', 'Customer Name');
+CALL prisma_update_column_comment('customers', 'email', 'e-mail');
+
+-- products comments
+ALTER TABLE \`products\` COMMENT = 'Product''s';
+CALL prisma_update_column_comment('products', 'product_id', 'Product ID');
+CALL prisma_update_column_comment('products', 'name', 'Product Name');
+CALL prisma_update_column_comment('products', 'type', 'Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION)');
+CALL prisma_update_column_comment('products', 'description', 'Product Description');
+CALL prisma_update_column_comment('products', 'price', 'Price');
+
+-- sales comments
+CALL prisma_update_column_comment('sales', 'sale_id', 'Sale ID');
+CALL prisma_update_column_comment('sales', 'customer_id', 'Customer ID');
+CALL prisma_update_column_comment('sales', 'product_id', 'Product ID');
+CALL prisma_update_column_comment('sales', 'quantity', 'Quantity');
+CALL prisma_update_column_comment('sales', 'total_price', 'Total Price');
+
+-- Drop stored procedure to update column comments
+DROP PROCEDURE IF EXISTS prisma_update_column_comment;
+"
+`;
+
 exports[`target-column > comments-latest.json 1`] = `
 "{
   "customers": {

@@ -10,7 +10,7 @@ generator comments {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -31,13 +31,13 @@ model Customer {
   name       String
   /// e-mail
   email      String   @unique
-  createdAt  DateTime @default(dbgenerated("statement_timestamp()")) @map("created_at") @db.Timestamptz()
+  createdAt  DateTime @default(now()) @map("created_at")
   sales      Sale[]
 
   @@map("customers")
 }
 
-/// Product's information
+/// Product's
 model Product {
   /// Product ID
   productId   Int         @id @default(autoincrement()) @map("product_id")
@@ -49,7 +49,7 @@ model Product {
   description String?
   /// Price
   price       Float
-  createdAt   DateTime    @default(dbgenerated("statement_timestamp()")) @map("created_at") @db.Timestamptz()
+  createdAt   DateTime    @default(now()) @map("created_at")
   sales       Sale[]
 
   @@map("products")
@@ -68,7 +68,7 @@ model Sale {
   quantity   Int
   /// Total Price
   totalPrice Float    @map("total_price")
-  createdAt  DateTime @default(dbgenerated("statement_timestamp()")) @map("created_at") @db.Timestamptz()
+  createdAt  DateTime @default(now()) @map("created_at")
 
   @@map("sales")
 }

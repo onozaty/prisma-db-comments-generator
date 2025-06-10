@@ -1,5 +1,6 @@
 ﻿node_modules/
 dist/
 prisma/migrations/
+prisma-mysql/migrations/
 coverage/
 src/__fixtures__/**/migrations/
