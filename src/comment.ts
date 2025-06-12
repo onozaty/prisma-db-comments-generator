@@ -33,7 +33,13 @@ export const createComments = (
     ignorePattern,
     ignoreCommentPattern,
     includeEnumInFieldComment,
-  }: Config,
+  }: Pick<
+    Config,
+    | "targets"
+    | "ignorePattern"
+    | "ignoreCommentPattern"
+    | "includeEnumInFieldComment"
+  >,
 ): Comments => {
   const comments: Comments = {};
 
