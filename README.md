@@ -240,8 +240,24 @@ COMMENT ON COLUMN "products"."type" IS E'Product Type\nenum: enum_product_type(B
 ## Supported Databases
 
 - PostgreSQL
+- MySQL (Experimental)
 
-Other databases may be available, but the above is the only one checked.
+### MySQL Support (Experimental)
+
+MySQL support is currently experimental and we are seeking feedback. For MySQL, this generator uses stored procedures to manage column comments due to MySQL's specific syntax requirements for column comment updates.
+
+**Why Stored Procedures are Used:**
+MySQL requires the full column definition when updating column comments via `ALTER TABLE ... MODIFY COLUMN`. To handle this complexity, the generator creates a stored procedure (`prisma_update_column_comment`) that dynamically retrieves the current column definition from `information_schema` and safely applies the comment update.
+
+**Required MySQL Permissions:**
+- `CREATE ROUTINE` - Required to create stored procedures for column comments
+- `ALTER ROUTINE` - Required to modify stored procedures if needed
+
+The generated SQL includes:
+- Direct `ALTER TABLE` statements for table comments
+- Stored procedures for column comment updates (automatically created and cleaned up)
+
+Other databases may be available, but the above are the only ones tested.
 
 ## License
 
