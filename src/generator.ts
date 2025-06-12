@@ -7,72 +7,26 @@
  * in Prisma itself.
  */
 
-import {
-  EnvValue,
-  generatorHandler,
-  GeneratorOptions,
-} from "@prisma/generator-helper";
-import { parseEnvValue } from "@prisma/internals";
+import { generatorHandler, GeneratorOptions } from "@prisma/generator-helper";
 import fs from "fs";
 import path from "path";
 import { version } from "../package.json";
-import {
-  AllTargets,
-  Comments,
-  createComments,
-  diffComments,
-  Target,
-} from "./comment";
+import { Comments, createComments, diffComments } from "./comment";
+import { readConfig } from "./config";
 import { parse } from "./parser";
-import { DatabaseProvider, generateCommentStatements } from "./statement";
+import { generateCommentStatements } from "./statement";
 
-const generate = async ({
-  generator,
-  dmmf,
-  schemaPath,
-  datasources,
-}: GeneratorOptions) => {
-  const outputDir = parseEnvValue(generator.output as EnvValue);
-  fs.mkdirSync(outputDir, { recursive: true });
+const generate = async (options: GeneratorOptions) => {
+  const { dmmf, schemaPath } = options;
+  const config = readConfig(options);
 
-  const targets: readonly Target[] = Array.isArray(generator.config.targets)
-    ? (generator.config.targets as Target[])
-    : AllTargets;
-
-  let ignorePattern;
-  if (
-    generator.config.ignorePattern &&
-    typeof generator.config.ignorePattern === "string"
-  ) {
-    ignorePattern = new RegExp(generator.config.ignorePattern);
-  }
-
-  let ignoreCommentPattern;
-  if (
-    generator.config.ignoreCommentPattern &&
-    typeof generator.config.ignoreCommentPattern === "string"
-  ) {
-    ignoreCommentPattern = new RegExp(generator.config.ignoreCommentPattern);
-  }
-
-  let includeEnumInFieldComment = false;
-  if (
-    generator.config.includeEnumInFieldComment &&
-    typeof generator.config.includeEnumInFieldComment === "string"
-  ) {
-    includeEnumInFieldComment =
-      generator.config.includeEnumInFieldComment === "true";
-  }
+  fs.mkdirSync(config.outputDir, { recursive: true });
 
   const models = parse(dmmf.datamodel);
-  const currentComments = createComments(models, targets, {
-    ignorePattern,
-    ignoreCommentPattern,
-    includeEnumInFieldComment,
-  });
+  const currentComments = createComments(models, config);
 
   // load latest
-  const latestFilePath = path.join(outputDir, "comments-latest.json");
+  const latestFilePath = path.join(config.outputDir, "comments-latest.json");
   let latestComments: Comments;
   if (fs.existsSync(latestFilePath)) {
     const json = fs.readFileSync(latestFilePath, "utf-8");
@@ -83,15 +37,7 @@ const generate = async ({
 
   const diff = diffComments(currentComments, latestComments);
 
-  // データベースプロバイダーを取得
-  const provider: DatabaseProvider =
-    datasources.length > 0
-      ? datasources[0].activeProvider === "mysql"
-        ? "mysql"
-        : "postgresql"
-      : "postgresql";
-
-  const commentStatements = generateCommentStatements(diff, provider);
+  const commentStatements = generateCommentStatements(diff, config.provider);
 
   if (commentStatements.length === 0) {
     console.log(

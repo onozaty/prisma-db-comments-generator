@@ -13,6 +13,7 @@
   "scripts": {
     "build": "rm -rf dist/ && node build.js",
     "prepare": "pnpm run build",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write src/**",
     "lint": "eslint 'src/**/*.ts' --ignore-pattern 'src/__fixtures__/**'",
     "test": "vitest run",
