@@ -7,7 +7,8 @@ describe("createComments", () => {
     const models: Model[] = [];
 
     // Act
-    const comments = createComments(models, AllTargets, {
+    const comments = createComments(models, {
+      targets: AllTargets,
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: false,
@@ -53,7 +54,8 @@ describe("createComments", () => {
     ];
 
     // Act
-    const comments = createComments(models, AllTargets, {
+    const comments = createComments(models, {
+      targets: AllTargets,
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: false,
@@ -140,7 +142,8 @@ describe("createComments", () => {
     ];
 
     // Act
-    const comments = createComments(models, AllTargets, {
+    const comments = createComments(models, {
+      targets: AllTargets,
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: true,
@@ -220,7 +223,8 @@ describe("createComments", () => {
     ];
 
     // Act
-    const comments = createComments(models, AllTargets, {
+    const comments = createComments(models, {
+      targets: AllTargets,
       ignorePattern: /table1/,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: false,
@@ -279,7 +283,8 @@ describe("createComments", () => {
     ];
 
     // Act
-    const comments = createComments(models, AllTargets, {
+    const comments = createComments(models, {
+      targets: AllTargets,
       ignorePattern: undefined,
       ignoreCommentPattern: /field1|table2/,
       includeEnumInFieldComment: false,
@@ -348,7 +353,8 @@ describe("createComments", () => {
     ];
 
     // Act
-    const comments = createComments(models, ["table"], {
+    const comments = createComments(models, {
+      targets: ["table"],
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: false,
@@ -381,7 +387,8 @@ describe("createComments", () => {
     ];
 
     // Act
-    const comments = createComments(models, ["column"], {
+    const comments = createComments(models, {
+      targets: ["column"],
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: false,
@@ -447,7 +454,8 @@ describe("createComments", () => {
     ];
 
     // Act
-    const comments = createComments(models, AllTargets, {
+    const comments = createComments(models, {
+      targets: AllTargets,
       ignorePattern: /^ignore_/,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: true,
@@ -519,7 +527,8 @@ describe("createComments", () => {
     ];
 
     // Act
-    const comments = createComments(models, AllTargets, {
+    const comments = createComments(models, {
+      targets: AllTargets,
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       includeEnumInFieldComment: true,

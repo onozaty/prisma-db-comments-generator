@@ -7,70 +7,29 @@
  * in Prisma itself.
  */
 
-import {
-  EnvValue,
-  generatorHandler,
-  GeneratorOptions,
-} from "@prisma/generator-helper";
-import { parseEnvValue } from "@prisma/internals";
-import { promises as fs } from "fs";
+import { generatorHandler, GeneratorOptions } from "@prisma/generator-helper";
+import fs from "fs";
 import path from "path";
 import { version } from "../package.json";
-import {
-  AllTargets,
-  Comments,
-  createComments,
-  diffComments,
-  Target,
-} from "./comment";
+import { Comments, createComments, diffComments } from "./comment";
+import { readConfig } from "./config";
 import { parse } from "./parser";
 import { generateCommentStatements } from "./statement";
 
-const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
-  const outputDir = parseEnvValue(generator.output as EnvValue);
-  await fs.mkdir(outputDir, { recursive: true });
+const generate = async (options: GeneratorOptions) => {
+  const { dmmf, schemaPath } = options;
+  const config = readConfig(options);
 
-  const targets: readonly Target[] = Array.isArray(generator.config.targets)
-    ? (generator.config.targets as Target[])
-    : AllTargets;
-
-  let ignorePattern;
-  if (
-    generator.config.ignorePattern &&
-    typeof generator.config.ignorePattern === "string"
-  ) {
-    ignorePattern = new RegExp(generator.config.ignorePattern);
-  }
-
-  let ignoreCommentPattern;
-  if (
-    generator.config.ignoreCommentPattern &&
-    typeof generator.config.ignoreCommentPattern === "string"
-  ) {
-    ignoreCommentPattern = new RegExp(generator.config.ignoreCommentPattern);
-  }
-
-  let includeEnumInFieldComment = false;
-  if (
-    generator.config.includeEnumInFieldComment &&
-    typeof generator.config.includeEnumInFieldComment === "string"
-  ) {
-    includeEnumInFieldComment =
-      generator.config.includeEnumInFieldComment === "true";
-  }
+  fs.mkdirSync(config.outputDir, { recursive: true });
 
   const models = parse(dmmf.datamodel);
-  const currentComments = createComments(models, targets, {
-    ignorePattern,
-    ignoreCommentPattern,
-    includeEnumInFieldComment,
-  });
+  const currentComments = createComments(models, config);
 
   // load latest
-  const latestFilePath = path.join(outputDir, "comments-latest.json");
+  const latestFilePath = path.join(config.outputDir, "comments-latest.json");
   let latestComments: Comments;
-  if (await exists(latestFilePath)) {
-    const json = await fs.readFile(latestFilePath, "utf-8");
+  if (fs.existsSync(latestFilePath)) {
+    const json = fs.readFileSync(latestFilePath, "utf-8");
     latestComments = JSON.parse(json);
   } else {
     latestComments = {};
@@ -78,7 +37,7 @@ const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
 
   const diff = diffComments(currentComments, latestComments);
 
-  const commentStatements = generateCommentStatements(diff);
+  const commentStatements = generateCommentStatements(diff, config.provider);
 
   if (commentStatements.length === 0) {
     console.log(
@@ -93,31 +52,13 @@ const generate = async ({ generator, dmmf, schemaPath }: GeneratorOptions) => {
   );
 
   // update latest
-  await fs.writeFile(
+  fs.writeFileSync(
     latestFilePath,
     JSON.stringify(currentComments, null, 2),
     "utf-8",
   );
 
   console.log(`Comments generation completed: ${migrationDirName}`);
-};
-
-const exists = async (path: string) => {
-  try {
-    await fs.access(path);
-    return true;
-  } catch (err) {
-    if (
-      typeof err === "object" &&
-      err !== null &&
-      "code" in err &&
-      err.code === "ENOENT"
-    ) {
-      return false;
-    }
-
-    throw err;
-  }
 };
 
 const outputMigrationFile = async (
@@ -134,8 +75,8 @@ const outputMigrationFile = async (
   const dirName = `${dateStr}_update_comments`;
 
   const migrationDir = path.join(baseDirPath, "migrations", dirName);
-  await fs.mkdir(migrationDir, { recursive: true });
-  await fs.writeFile(
+  fs.mkdirSync(migrationDir, { recursive: true });
+  fs.writeFileSync(
     path.join(migrationDir, "migration.sql"),
     `-- Prisma Database Comments Generator v${version}\n\n` +
       commentStatements.join("\n"),

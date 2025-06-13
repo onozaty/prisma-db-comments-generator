@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   app:
     build:
@@ -9,7 +7,9 @@ services:
       - ../..:/workspaces:cached
       - app-node-modules:/workspaces/app/node_modules
     command: sleep infinity
-    network_mode: service:db
+    depends_on:
+      - db
+      - mysql
   db:
     image: postgres:latest
     restart: unless-stopped
@@ -19,6 +19,23 @@ services:
       POSTGRES_PASSWORD: db_password
       POSTGRES_USER: db_user
       POSTGRES_DB: sample
+    ports:
+      - 5432:5432
+
+  mysql:
+    image: mysql:latest
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: sample
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: db_password
+    ports:
+      - 3306:3306
+
   pgadmin4:
     image: dpage/pgadmin4:latest
     ports:
@@ -33,7 +50,21 @@ services:
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
     depends_on:
       - db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: unless-stopped
+    ports:
+      - 8081:80
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: db_user
+      PMA_PASSWORD: db_password
+      MYSQL_ROOT_PASSWORD: root_password
+    depends_on:
+      - mysql
 volumes:
   postgres-data:
+  mysql-data:
   app-node-modules:
   pgadmin-data:

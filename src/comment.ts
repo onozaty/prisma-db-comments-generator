@@ -1,3 +1,4 @@
+import { Config } from "./config";
 import { Field, Model } from "./parser";
 
 export type Comments = {
@@ -27,16 +28,18 @@ export type Target = (typeof AllTargets)[number];
 
 export const createComments = (
   models: readonly Model[],
-  targets: readonly Target[],
   {
+    targets,
     ignorePattern,
     ignoreCommentPattern,
     includeEnumInFieldComment,
-  }: {
-    ignorePattern?: RegExp;
-    ignoreCommentPattern?: RegExp;
-    includeEnumInFieldComment: boolean;
-  },
+  }: Pick<
+    Config,
+    | "targets"
+    | "ignorePattern"
+    | "ignoreCommentPattern"
+    | "includeEnumInFieldComment"
+  >,
 ): Comments => {
   const comments: Comments = {};
 
