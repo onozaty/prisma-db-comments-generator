@@ -1,0 +1,12 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator comments {
+  provider = "node ./dist/generator.cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}

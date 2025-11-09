@@ -1,0 +1,13 @@
+/// User
+model User {
+  /// User ID
+  userId    Int      @id @default(autoincrement()) @map("user_id")
+  /// User Name
+  name      String
+  /// Email address
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  posts     Post[]
+
+  @@map("users")
+}
