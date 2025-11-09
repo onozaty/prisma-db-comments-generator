@@ -256,6 +256,89 @@ COMMENT ON COLUMN "shops"."created_at" IS 'Created At';
 "
 `;
 
+exports[`multi-file-schema > comments-latest.json 1`] = `
+"{
+  "posts": {
+    "table": {
+      "tableName": "posts",
+      "comment": "Blog Post"
+    },
+    "columns": [
+      {
+        "tableName": "posts",
+        "columnName": "post_id",
+        "comment": "Post ID"
+      },
+      {
+        "tableName": "posts",
+        "columnName": "title",
+        "comment": "Post Title"
+      },
+      {
+        "tableName": "posts",
+        "columnName": "content",
+        "comment": "Post Content"
+      },
+      {
+        "tableName": "posts",
+        "columnName": "author_id",
+        "comment": "Author ID"
+      },
+      {
+        "tableName": "posts",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  },
+  "users": {
+    "table": {
+      "tableName": "users",
+      "comment": "User"
+    },
+    "columns": [
+      {
+        "tableName": "users",
+        "columnName": "user_id",
+        "comment": "User ID"
+      },
+      {
+        "tableName": "users",
+        "columnName": "name",
+        "comment": "User Name"
+      },
+      {
+        "tableName": "users",
+        "columnName": "email",
+        "comment": "Email address"
+      },
+      {
+        "tableName": "users",
+        "columnName": "created_at",
+        "comment": ""
+      }
+    ]
+  }
+}"
+`;
+
+exports[`multi-file-schema > migration.sql 1`] = `
+"
+-- posts comments
+COMMENT ON TABLE "posts" IS 'Blog Post';
+COMMENT ON COLUMN "posts"."post_id" IS 'Post ID';
+COMMENT ON COLUMN "posts"."title" IS 'Post Title';
+COMMENT ON COLUMN "posts"."content" IS 'Post Content';
+COMMENT ON COLUMN "posts"."author_id" IS 'Author ID';
+
+-- users comments
+COMMENT ON TABLE "users" IS 'User';
+COMMENT ON COLUMN "users"."user_id" IS 'User ID';
+COMMENT ON COLUMN "users"."name" IS 'User Name';
+COMMENT ON COLUMN "users"."email" IS 'Email address';
+"
+`;
+
 exports[`multi-schema > comments-latest.json 1`] = `
 "{
   "foo.registered_user": {

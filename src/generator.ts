@@ -17,7 +17,7 @@ import { parse } from "./parser";
 import { generateCommentStatements } from "./statement";
 
 const generate = async (options: GeneratorOptions) => {
-  const { dmmf, schemaPath } = options;
+  const { dmmf } = options;
   const config = readConfig(options);
 
   fs.mkdirSync(config.outputDir, { recursive: true });
@@ -47,7 +47,7 @@ const generate = async (options: GeneratorOptions) => {
   }
 
   const migrationDirName = await outputMigrationFile(
-    path.dirname(schemaPath),
+    config.outputDir,
     commentStatements,
   );
 
@@ -62,7 +62,7 @@ const generate = async (options: GeneratorOptions) => {
 };
 
 const outputMigrationFile = async (
-  baseDirPath: string,
+  migrationsDir: string,
   commentStatements: string[],
 ) => {
   const date = new Date();
@@ -74,7 +74,7 @@ const outputMigrationFile = async (
     .replace(".000", "");
   const dirName = `${dateStr}_update_comments`;
 
-  const migrationDir = path.join(baseDirPath, "migrations", dirName);
+  const migrationDir = path.join(migrationsDir, dirName);
   fs.mkdirSync(migrationDir, { recursive: true });
   fs.writeFileSync(
     path.join(migrationDir, "migration.sql"),

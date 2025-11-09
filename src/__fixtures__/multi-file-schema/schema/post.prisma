@@ -1,0 +1,15 @@
+/// Blog Post
+model Post {
+  /// Post ID
+  postId    Int      @id @default(autoincrement()) @map("post_id")
+  /// Post Title
+  title     String
+  /// Post Content
+  content   String?
+  author    User     @relation(fields: [authorId], references: [userId])
+  /// Author ID
+  authorId  Int      @map("author_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("posts")
+}

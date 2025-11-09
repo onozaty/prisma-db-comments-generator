@@ -111,8 +111,27 @@ test("mysql", async () => {
   expect(commentsLatestJsonContent).toMatchSnapshot("comments-latest.json");
 });
 
+test("multi-file-schema", async () => {
+  // Arrange
+  const name = "multi-file-schema";
+
+  // Act
+  executeGenerate(name);
+
+  // Assert
+  const migrationSqlContent = readMigrationSql(name);
+  expect(migrationSqlContent).toMatchSnapshot("migration.sql");
+
+  const commentsLatestJsonContent = readCommentsLatestJson(name);
+  expect(commentsLatestJsonContent).toMatchSnapshot("comments-latest.json");
+});
+
 const executeGenerate = (name: string) => {
-  const schemaPath = path.join(fixturesDir, name, "schema.prisma");
+  // For multi-file-schema, use the schema folder instead of schema.prisma file
+  const schemaPath =
+    name === "multi-file-schema"
+      ? path.join(fixturesDir, name, "schema")
+      : path.join(fixturesDir, name, "schema.prisma");
   child_process.execSync(`npx prisma generate --schema ${schemaPath}`);
 };
 
@@ -155,5 +174,9 @@ const readMigrationSql = (name: string): string => {
 };
 
 const getMigrationsDir = (name: string) => {
+  // For multi-file-schema, migrations are in the schema subfolder
+  if (name === "multi-file-schema") {
+    return path.join(fixturesDir, name, "schema", "migrations");
+  }
   return path.join(fixturesDir, name, "migrations");
 };
