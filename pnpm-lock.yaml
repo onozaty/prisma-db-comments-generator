@@ -9,10 +9,10 @@ importers:
   .:
     dependencies:
       '@prisma/generator-helper':
-        specifier: ^5.0.0 || ^6.0.0
+        specifier: ^5.0.0 || ^6.0.0 || ^7.0.0
         version: 6.8.2
       '@prisma/internals':
-        specifier: ^5.0.0 || ^6.0.0
+        specifier: ^5.0.0 || ^6.0.0 || ^7.0.0
         version: 6.8.2(typescript@5.8.3)
     devDependencies:
       '@eslint/js':
