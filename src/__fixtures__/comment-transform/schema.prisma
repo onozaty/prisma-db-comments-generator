@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator comments {
+  provider               = "node ./dist/generator.cjs"
+  commentRemovePattern   = "^@prismabox\\.[^\\n]+\\n"
+  commentTransformScript = "./transform.js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// @prismabox.options{max: 10}
+/// Customer table
+model Customer {
+  /// @prismabox.options{max: 10}
+  /// Customer ID
+  customerId Int    @id @map("customer_id")
+  /// @prismabox.hide
+  /// Customer Name
+  name       String
+
+  @@map("customers")
+}

@@ -580,6 +580,400 @@ describe("createComments", () => {
       },
     });
   });
+
+  test("commentRemovePattern strips matched prefix", () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "table1",
+        documentation: "@Description ユーザーテーブル",
+        fields: [
+          { dbName: "field1", documentation: "@Description ユーザーID" },
+          { dbName: "field2", documentation: "通常のコメント" },
+        ],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      commentRemovePattern: /@Description /,
+      includeEnumInFieldComment: false,
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      table1: {
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "ユーザーテーブル",
+        },
+        columns: [
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field1",
+            comment: "ユーザーID",
+          },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field2",
+            comment: "通常のコメント",
+          },
+        ],
+      },
+    });
+  });
+
+  test("commentRemovePattern strips matched portion", () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "table1",
+        documentation: "ユーザーテーブル @internal",
+        fields: [{ dbName: "field1", documentation: "ユーザーID @internal" }],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      commentRemovePattern: / @internal/,
+      includeEnumInFieldComment: false,
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      table1: {
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "ユーザーテーブル",
+        },
+        columns: [
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field1",
+            comment: "ユーザーID",
+          },
+        ],
+      },
+    });
+  });
+
+  test("commentRemovePattern non-match leaves comment unchanged", () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "table1",
+        documentation: "通常のコメント",
+        fields: [{ dbName: "field1", documentation: "フィールドコメント" }],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      commentRemovePattern: /@Description /,
+      includeEnumInFieldComment: false,
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      table1: {
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "通常のコメント",
+        },
+        columns: [
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field1",
+            comment: "フィールドコメント",
+          },
+        ],
+      },
+    });
+  });
+
+  test("commentRemovePattern removes first line of multiline comment", () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "table1",
+        fields: [
+          {
+            dbName: "userId",
+            documentation: "@prismabox.options{max: 10}\nthis is the user id",
+          },
+          {
+            dbName: "name",
+            documentation: "@prismabox.hide\nthis is the name",
+          },
+        ],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      commentRemovePattern: /^@prismabox\.[^\n]+\n/,
+      includeEnumInFieldComment: false,
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      table1: {
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "",
+        },
+        columns: [
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "userId",
+            comment: "this is the user id",
+          },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "name",
+            comment: "this is the name",
+          },
+        ],
+      },
+    });
+  });
+
+  test("commentRemovePattern removes second line of multiline comment", () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "table1",
+        fields: [
+          {
+            dbName: "userId",
+            documentation: "this is the user id\n@prismabox.options{max: 10}",
+          },
+          {
+            dbName: "name",
+            documentation: "this is the name\n@prismabox.hide",
+          },
+        ],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      commentRemovePattern: /\n@prismabox\.[^\n]+/,
+      includeEnumInFieldComment: false,
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      table1: {
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "",
+        },
+        columns: [
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "userId",
+            comment: "this is the user id",
+          },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "name",
+            comment: "this is the name",
+          },
+        ],
+      },
+    });
+  });
+
+  test("commentTransformFn transforms comments with context", () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "users",
+        documentation: "table: users comment",
+        fields: [{ dbName: "id", documentation: "column: id comment" }],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      includeEnumInFieldComment: false,
+      commentTransformFn: (comment, context) => `[${context.type}] ${comment}`,
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      users: {
+        table: {
+          schema: undefined,
+          tableName: "users",
+          comment: "[table] table: users comment",
+        },
+        columns: [
+          {
+            schema: undefined,
+            tableName: "users",
+            columnName: "id",
+            comment: "[column] column: id comment",
+          },
+        ],
+      },
+    });
+  });
+
+  test("commentTransformFn receives correct context fields", () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        schema: "myschema",
+        dbName: "users",
+        documentation: "table comment",
+        fields: [{ dbName: "email", documentation: "field comment" }],
+      },
+    ];
+
+    const capturedContexts: {
+      comment: string;
+      type: string;
+      tableName: string;
+      columnName?: string;
+      schema?: string;
+    }[] = [];
+
+    // Act
+    createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      includeEnumInFieldComment: false,
+      commentTransformFn: (comment, context) => {
+        capturedContexts.push({ comment, ...context });
+        return comment;
+      },
+    });
+
+    // Assert
+    expect(capturedContexts).toEqual([
+      {
+        comment: "table comment",
+        type: "table",
+        tableName: "users",
+        schema: "myschema",
+      },
+      {
+        comment: "field comment",
+        type: "column",
+        tableName: "users",
+        columnName: "email",
+        schema: "myschema",
+      },
+    ]);
+  });
+
+  test("commentRemovePattern and commentTransformFn applied in sequence", () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "table1",
+        documentation: "@Description テーブルコメント",
+        fields: [
+          {
+            dbName: "field1",
+            documentation: "@Description フィールドコメント",
+          },
+        ],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      commentRemovePattern: /@Description /,
+      includeEnumInFieldComment: false,
+      commentTransformFn: (comment) => comment.toUpperCase(),
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      table1: {
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "テーブルコメント".toUpperCase(),
+        },
+        columns: [
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field1",
+            comment: "フィールドコメント".toUpperCase(),
+          },
+        ],
+      },
+    });
+  });
+
+  test("commentTransformFn is not called for undefined documentation", () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "table1",
+        fields: [{ dbName: "field1" }],
+      },
+    ];
+
+    const fnCallCount = { count: 0 };
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      includeEnumInFieldComment: false,
+      commentTransformFn: () => {
+        fnCallCount.count++;
+        return "transformed";
+      },
+    });
+
+    // Assert
+    expect(fnCallCount.count).toBe(0);
+    expect(comments.table1.table?.comment).toBe("");
+    expect(comments.table1.columns?.[0].comment).toBe("");
+  });
 });
 
 describe("diffComments", () => {

@@ -18,7 +18,7 @@ import { generateCommentStatements } from "./statement";
 
 const generate = async (options: GeneratorOptions) => {
   const { dmmf } = options;
-  const config = readConfig(options);
+  const config = await readConfig(options);
 
   fs.mkdirSync(config.outputDir, { recursive: true });
 

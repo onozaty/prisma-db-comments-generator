@@ -1,6 +1,18 @@
 import { Config } from "./config";
 import { Field, Model } from "./parser";
 
+export type CommentTransformContext = {
+  type: "table" | "column";
+  tableName: string;
+  columnName?: string;
+  schema?: string;
+};
+
+export type CommentTransformFn = (
+  comment: string,
+  context: CommentTransformContext,
+) => string;
+
 export type Comments = {
   [key: string]: TableComments;
 };
@@ -32,14 +44,10 @@ export const createComments = (
     targets,
     ignorePattern,
     ignoreCommentPattern,
+    commentRemovePattern,
+    commentTransformFn,
     includeEnumInFieldComment,
-  }: Pick<
-    Config,
-    | "targets"
-    | "ignorePattern"
-    | "ignoreCommentPattern"
-    | "includeEnumInFieldComment"
-  >,
+  }: Omit<Config, "provider" | "outputDir">,
 ): Comments => {
   const comments: Comments = {};
 
@@ -53,7 +61,11 @@ export const createComments = (
         ? {
             schema: model.schema,
             tableName: model.dbName,
-            comment: createModelCommentString(model, ignoreCommentPattern),
+            comment: createModelCommentString(model, {
+              ignoreCommentPattern,
+              commentRemovePattern,
+              commentTransformFn,
+            }),
           }
         : undefined,
       columns: targets.includes("column")
@@ -62,11 +74,12 @@ export const createComments = (
               schema: model.schema,
               tableName: model.dbName,
               columnName: field.dbName,
-              comment: createFieldCommentString(
-                field,
+              comment: createFieldCommentString(field, model, {
                 ignoreCommentPattern,
                 includeEnumInFieldComment,
-              ),
+                commentRemovePattern,
+                commentTransformFn,
+              }),
             };
           })
         : undefined,
@@ -76,18 +89,54 @@ export const createComments = (
   return comments;
 };
 
+const applyCommentTransform = (
+  comment: string,
+  {
+    commentRemovePattern,
+    commentTransformFn,
+  }: Pick<Config, "commentRemovePattern" | "commentTransformFn">,
+  context: CommentTransformContext,
+): string => {
+  let result = comment;
+  if (commentRemovePattern) {
+    result = result.replace(commentRemovePattern, "");
+  }
+  if (commentTransformFn) {
+    result = commentTransformFn(result, context);
+  }
+  return result;
+};
+
 const createFieldCommentString = (
   field: Field,
-  ignoreCommentPattern: RegExp | undefined,
-  includeEnumInFieldComment: boolean,
+  model: Model,
+  config: Pick<
+    Config,
+    | "ignoreCommentPattern"
+    | "commentRemovePattern"
+    | "commentTransformFn"
+    | "includeEnumInFieldComment"
+  >,
 ) => {
-  let comment = field.documentation ?? "";
-
-  if (ignoreCommentPattern && ignoreCommentPattern.test(comment)) {
+  if (
+    config.ignoreCommentPattern &&
+    field.documentation !== undefined &&
+    config.ignoreCommentPattern.test(field.documentation)
+  ) {
     return "";
   }
 
-  if (includeEnumInFieldComment && field.typeEnum) {
+  let comment =
+    field.documentation !== undefined
+      ? applyCommentTransform(field.documentation, config, {
+          type: "column",
+          tableName: model.dbName,
+          columnName: field.dbName,
+          schema: model.schema,
+        })
+      : "";
+
+  if (config.includeEnumInFieldComment && field.typeEnum) {
     if (comment !== "") {
       comment += "\n";
     }
@@ -99,17 +148,24 @@ const createFieldCommentString = (
 
 const createModelCommentString = (
   model: Model,
-  ignoreCommentPattern: RegExp | undefined,
+  config: Pick<
+    Config,
+    "ignoreCommentPattern" | "commentRemovePattern" | "commentTransformFn"
+  >,
 ): string => {
-  if (model.documentation === undefined) {
+  if (
+    model.documentation === undefined ||
+    (config.ignoreCommentPattern &&
+      config.ignoreCommentPattern.test(model.documentation))
+  ) {
     return "";
   }
 
-  if (ignoreCommentPattern && ignoreCommentPattern.test(model.documentation)) {
-    return "";
-  }
-
-  return model.documentation;
+  return applyCommentTransform(model.documentation, config, {
+    type: "table",
+    tableName: model.dbName,
+    schema: model.schema,
+  });
 };
 
 export const diffComments = (first: Comments, second: Comments): Comments => {
