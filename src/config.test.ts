@@ -313,7 +313,7 @@ describe("readConfig", () => {
     // Arrange
     const generator = {
       ...baseGenerator,
-      sourceFilePath: "/workspaces/prisma-db-comments-generator/schema.prisma",
+      sourceFilePath: `${__dirname}/../schema.prisma`,
       config: {
         commentTransformScript: "./src/__fixtures__/comment-transform.js",
       },
