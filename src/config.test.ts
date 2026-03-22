@@ -353,9 +353,9 @@ describe("readConfig", () => {
     // Arrange
     const generator = {
       ...baseGenerator,
-      sourceFilePath: "/workspaces/prisma-db-comments-generator/schema.prisma",
+      sourceFilePath: `${__dirname}/../schema.prisma`,
       config: {
-        commentTransformScript: "./src/config.ts", // exists but doesn't export a default function
+        commentTransformScript: "./src/__fixtures__/no-export.js",
       },
     };
     const datasources = baseDatasources;
