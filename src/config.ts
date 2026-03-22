@@ -1,21 +1,24 @@
 import { EnvValue, GeneratorOptions } from "@prisma/generator-helper";
 import { parseEnvValue } from "@prisma/internals";
-import { AllTargets, Target } from "./comment";
+import path from "path";
+import { AllTargets, CommentTransformFn, Target } from "./comment";
 import { DatabaseProvider } from "./statement";
 
 export interface Config {
   targets: readonly Target[];
   ignorePattern?: RegExp;
   ignoreCommentPattern?: RegExp;
+  commentRemovePattern?: RegExp;
+  commentTransformFn?: CommentTransformFn;
   includeEnumInFieldComment: boolean;
   provider: DatabaseProvider;
   outputDir: string;
 }
 
-export const readConfig = ({
+export const readConfig = async ({
   generator,
   datasources,
-}: Pick<GeneratorOptions, "generator" | "datasources">): Config => {
+}: Pick<GeneratorOptions, "generator" | "datasources">): Promise<Config> => {
   const targets: readonly Target[] = Array.isArray(generator.config.targets)
     ? (generator.config.targets as Target[])
     : AllTargets;
@@ -34,6 +37,46 @@ export const readConfig = ({
     typeof generator.config.ignoreCommentPattern === "string"
   ) {
     ignoreCommentPattern = new RegExp(generator.config.ignoreCommentPattern);
+  }
+
+  let commentRemovePattern;
+  if (
+    generator.config.commentRemovePattern &&
+    typeof generator.config.commentRemovePattern === "string"
+  ) {
+    commentRemovePattern = new RegExp(generator.config.commentRemovePattern);
+  }
+
+  let commentTransformFn: CommentTransformFn | undefined;
+  if (
+    generator.config.commentTransformScript &&
+    typeof generator.config.commentTransformScript === "string"
+  ) {
+    const scriptPath = path.resolve(
+      path.dirname(generator.sourceFilePath),
+      generator.config.commentTransformScript,
+    );
+    let mod: unknown;
+    try {
+      mod = await import(scriptPath);
+    } catch (e) {
+      throw new Error(
+        `Failed to load commentTransformScript: ${scriptPath}\n${e}`,
+      );
+    }
+    const fn =
+      mod != null &&
+      typeof (mod as { default?: unknown }).default === "function"
+        ? (mod as { default: CommentTransformFn }).default
+        : typeof mod === "function"
+          ? (mod as CommentTransformFn)
+          : undefined;
+    if (!fn) {
+      throw new Error(
+        `commentTransformScript must export a function: ${scriptPath}`,
+      );
+    }
+    commentTransformFn = fn;
   }
 
   let includeEnumInFieldComment = false;
@@ -58,6 +101,8 @@ export const readConfig = ({
     targets,
     ignorePattern,
     ignoreCommentPattern,
+    commentRemovePattern,
+    commentTransformFn,
     includeEnumInFieldComment,
     provider,
     outputDir,

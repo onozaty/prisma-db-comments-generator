@@ -158,6 +158,15 @@ COMMENT ON COLUMN "sales"."total_price" IS 'Total Price';
 
 ## Options
 
+| Option | Description |
+|---|---|
+| [targets](#targets) | Select targets for comment generation (`table`, `column`) |
+| [ignorePattern](#ignorepattern) | Exclude models by database name |
+| [ignoreCommentPattern](#ignorecommentpattern) | Exclude comments by content |
+| [commentRemovePattern](#commentremovepattern) | Remove matching text from comments |
+| [commentTransformScript](#commenttransformscript) | Transform comments with a script |
+| [includeEnumInFieldComment](#includeenuminfieldcomment) | Add enum values to field comments |
+
 ### targets
 
 You can select the target with `targets`.
@@ -198,6 +207,80 @@ generator comments {
   ignoreCommentPattern = "@TypeGraphQL"
 }
 ```
+
+### commentRemovePattern
+
+Specify a regular expression with `commentRemovePattern` to remove matching text from comments.
+
+This is useful when combining with other Prisma generators that use annotations in triple-slash comments.
+For example, [prismabox](https://github.com/m1212e/prismabox) uses annotations like `@prismabox.hide` or `@prismabox.options{ min: 10, max: 20 }` in comments. Since Prisma concatenates multiple `///` comments with `\n`, you need to include the newline in the pattern.
+
+The following pattern removes any line starting with `@prismabox.`, covering all prismabox annotations.
+
+```prisma
+generator comments {
+  provider             = "prisma-db-comments-generator"
+  commentRemovePattern = "^@prismabox\\.[^\\n]+\\n"
+}
+```
+
+With the following definition,
+
+```prisma
+model User {
+  /// @prismabox.options{max: 10}
+  /// this is the user id
+  userId Int @map("user_id")
+
+  @@map("users")
+}
+```
+
+The following comment is generated (annotation line is removed).
+
+```sql
+COMMENT ON COLUMN "users"."user_id" IS 'this is the user id';
+```
+
+### commentTransformScript
+
+Specify the path to a JavaScript/TypeScript script with `commentTransformScript` to transform comments.
+The path is relative to the `schema.prisma` file.
+
+The script must export a function as its default export with the following signature:
+
+```ts
+(comment: string, context: CommentTransformContext) => string
+```
+
+`CommentTransformContext` has the following properties:
+
+| Property | Type | Description |
+|---|---|---|
+| `type` | `"table"` \| `"column"` | Whether the comment is for a table or column |
+| `tableName` | `string` | The database table name |
+| `columnName` | `string` \| `undefined` | The database column name (only for columns) |
+| `schema` | `string` \| `undefined` | The database schema name |
+
+```prisma
+generator comments {
+  provider               = "prisma-db-comments-generator"
+  commentTransformScript = "./comment-transform.js"
+}
+```
+
+Example `comment-transform.js`:
+
+```js
+export default (comment, context) => {
+  if (context.type === "table") {
+    return `[TABLE] ${comment}`;
+  }
+  return comment;
+};
+```
+
+If both `commentRemovePattern` and `commentTransformScript` are specified, `commentRemovePattern` is applied first, then `commentTransformScript`.
 
 ### includeEnumInFieldComment
 

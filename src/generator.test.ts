@@ -111,6 +111,21 @@ test("mysql", async () => {
   expect(commentsLatestJsonContent).toMatchSnapshot("comments-latest.json");
 });
 
+test("comment-transform", async () => {
+  // Arrange
+  const name = "comment-transform";
+
+  // Act
+  executeGenerate(name);
+
+  // Assert
+  const migrationSqlContent = readMigrationSql(name);
+  expect(migrationSqlContent).toMatchSnapshot("migration.sql");
+
+  const commentsLatestJsonContent = readCommentsLatestJson(name);
+  expect(commentsLatestJsonContent).toMatchSnapshot("comments-latest.json");
+});
+
 test("multi-file-schema", async () => {
   // Arrange
   const name = "multi-file-schema";
