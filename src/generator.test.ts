@@ -126,6 +126,36 @@ test("comment-transform", async () => {
   expect(commentsLatestJsonContent).toMatchSnapshot("comments-latest.json");
 });
 
+test("comment-remove-pattern", async () => {
+  // Arrange
+  const name = "comment-remove-pattern";
+
+  // Act
+  executeGenerate(name);
+
+  // Assert
+  const migrationSqlContent = readMigrationSql(name);
+  expect(migrationSqlContent).toMatchSnapshot("migration.sql");
+
+  const commentsLatestJsonContent = readCommentsLatestJson(name);
+  expect(commentsLatestJsonContent).toMatchSnapshot("comments-latest.json");
+});
+
+test("comment-remove-pattern-flags", async () => {
+  // Arrange
+  const name = "comment-remove-pattern-flags";
+
+  // Act
+  executeGenerate(name);
+
+  // Assert
+  const migrationSqlContent = readMigrationSql(name);
+  expect(migrationSqlContent).toMatchSnapshot("migration.sql");
+
+  const commentsLatestJsonContent = readCommentsLatestJson(name);
+  expect(commentsLatestJsonContent).toMatchSnapshot("comments-latest.json");
+});
+
 test("multi-file-schema", async () => {
   // Arrange
   const name = "multi-file-schema";

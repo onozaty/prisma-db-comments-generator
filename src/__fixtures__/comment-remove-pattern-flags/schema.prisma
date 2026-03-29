@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator comments {
+  provider                    = "node ./dist/generator.cjs"
+  commentRemovePattern        = " @internal"
+  commentRemovePatternFlags   = "gi"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Customer table @internal
+model Customer {
+  /// Customer ID @INTERNAL
+  customerId Int    @id @map("customer_id")
+  /// Customer Name @Internal @INTERNAL
+  name       String
+
+  @@map("customers")
+}
