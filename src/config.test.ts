@@ -35,6 +35,7 @@ describe("readConfig", () => {
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
       commentRemovePattern: undefined,
+      commentRemovePatternFlags: "g",
       commentTransformFn: undefined,
       includeEnumInFieldComment: false,
       provider: "postgresql",
@@ -279,6 +280,7 @@ describe("readConfig", () => {
       ignorePattern: expect.any(RegExp),
       ignoreCommentPattern: expect.any(RegExp),
       commentRemovePattern: undefined,
+      commentRemovePatternFlags: "g",
       commentTransformFn: undefined,
       includeEnumInFieldComment: true,
       provider: "mysql",
@@ -304,9 +306,58 @@ describe("readConfig", () => {
     // Assert
     expect(config.commentRemovePattern).toBeInstanceOf(RegExp);
     expect(config.commentRemovePattern?.source).toBe("@Description ");
+    expect(config.commentRemovePattern?.flags).toBe("g");
     expect(
-      "@Description User table".replace(config.commentRemovePattern!, ""),
+      "@Description User @Description table".replace(
+        config.commentRemovePattern!,
+        "",
+      ),
     ).toBe("User table");
+  });
+
+  test("creates commentRemovePattern RegExp with specified flags", async () => {
+    // Arrange
+    const generator = {
+      ...baseGenerator,
+      config: {
+        commentRemovePattern: "@internal",
+        commentRemovePatternFlags: "gi",
+      },
+    };
+    const datasources = baseDatasources;
+
+    // Act
+    const config = await readConfig({ generator, datasources });
+
+    // Assert
+    expect(config.commentRemovePattern).toBeInstanceOf(RegExp);
+    expect(config.commentRemovePattern?.flags).toBe("gi");
+    expect(
+      "@internal desc @INTERNAL".replace(config.commentRemovePattern!, ""),
+    ).toBe(" desc ");
+  });
+
+  test("creates commentRemovePattern RegExp with empty flags (no global)", async () => {
+    // Arrange
+    const generator = {
+      ...baseGenerator,
+      config: {
+        commentRemovePattern: "@internal",
+        commentRemovePatternFlags: "",
+      },
+    };
+    const datasources = baseDatasources;
+
+    // Act
+    const config = await readConfig({ generator, datasources });
+
+    // Assert
+    expect(config.commentRemovePattern).toBeInstanceOf(RegExp);
+    expect(config.commentRemovePattern?.flags).toBe("");
+    // フラグなしの場合は最初の1件のみ削除
+    expect(
+      "@internal desc @internal".replace(config.commentRemovePattern!, ""),
+    ).toBe(" desc @internal");
   });
 
   test("loads commentTransformFn from commentTransformScript", async () => {

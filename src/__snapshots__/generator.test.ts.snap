@@ -134,6 +134,70 @@ COMMENT ON COLUMN "sales"."total_price" IS 'Total Price';
 "
 `;
 
+exports[`comment-remove-pattern > comments-latest.json 1`] = `
+"{
+  "customers": {
+    "table": {
+      "tableName": "customers",
+      "comment": "Customer table"
+    },
+    "columns": [
+      {
+        "tableName": "customers",
+        "columnName": "customer_id",
+        "comment": "Customer ID"
+      },
+      {
+        "tableName": "customers",
+        "columnName": "name",
+        "comment": "Customer Name"
+      }
+    ]
+  }
+}"
+`;
+
+exports[`comment-remove-pattern > migration.sql 1`] = `
+"
+-- customers comments
+COMMENT ON TABLE "customers" IS 'Customer table';
+COMMENT ON COLUMN "customers"."customer_id" IS 'Customer ID';
+COMMENT ON COLUMN "customers"."name" IS 'Customer Name';
+"
+`;
+
+exports[`comment-remove-pattern-flags > comments-latest.json 1`] = `
+"{
+  "customers": {
+    "table": {
+      "tableName": "customers",
+      "comment": "Customer table"
+    },
+    "columns": [
+      {
+        "tableName": "customers",
+        "columnName": "customer_id",
+        "comment": "Customer ID"
+      },
+      {
+        "tableName": "customers",
+        "columnName": "name",
+        "comment": "Customer Name"
+      }
+    ]
+  }
+}"
+`;
+
+exports[`comment-remove-pattern-flags > migration.sql 1`] = `
+"
+-- customers comments
+COMMENT ON TABLE "customers" IS 'Customer table';
+COMMENT ON COLUMN "customers"."customer_id" IS 'Customer ID';
+COMMENT ON COLUMN "customers"."name" IS 'Customer Name';
+"
+`;
+
 exports[`comment-transform > comments-latest.json 1`] = `
 "{
   "customers": {

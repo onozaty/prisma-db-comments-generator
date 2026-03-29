@@ -9,6 +9,7 @@ export interface Config {
   ignorePattern?: RegExp;
   ignoreCommentPattern?: RegExp;
   commentRemovePattern?: RegExp;
+  commentRemovePatternFlags?: string;
   commentTransformFn?: CommentTransformFn;
   includeEnumInFieldComment: boolean;
   provider: DatabaseProvider;
@@ -39,12 +40,20 @@ export const readConfig = async ({
     ignoreCommentPattern = new RegExp(generator.config.ignoreCommentPattern);
   }
 
+  const commentRemovePatternFlags =
+    typeof generator.config.commentRemovePatternFlags === "string"
+      ? generator.config.commentRemovePatternFlags
+      : "g";
+
   let commentRemovePattern;
   if (
     generator.config.commentRemovePattern &&
     typeof generator.config.commentRemovePattern === "string"
   ) {
-    commentRemovePattern = new RegExp(generator.config.commentRemovePattern);
+    commentRemovePattern = new RegExp(
+      generator.config.commentRemovePattern,
+      commentRemovePatternFlags,
+    );
   }
 
   let commentTransformFn: CommentTransformFn | undefined;
@@ -102,6 +111,7 @@ export const readConfig = async ({
     ignorePattern,
     ignoreCommentPattern,
     commentRemovePattern,
+    commentRemovePatternFlags,
     commentTransformFn,
     includeEnumInFieldComment,
     provider,

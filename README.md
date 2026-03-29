@@ -164,6 +164,7 @@ COMMENT ON COLUMN "sales"."total_price" IS 'Total Price';
 | [ignorePattern](#ignorepattern) | Exclude models by database name |
 | [ignoreCommentPattern](#ignorecommentpattern) | Exclude comments by content |
 | [commentRemovePattern](#commentremovepattern) | Remove matching text from comments |
+| [commentRemovePatternFlags](#commentremovepatternflags) | Regex flags for `commentRemovePattern` (default: `g`) |
 | [commentTransformScript](#commenttransformscript) | Transform comments with a script |
 | [includeEnumInFieldComment](#includeenuminfieldcomment) | Add enum values to field comments |
 
@@ -211,6 +212,7 @@ generator comments {
 ### commentRemovePattern
 
 Specify a regular expression with `commentRemovePattern` to remove matching text from comments.
+By default, the pattern is applied globally (all occurrences are removed). See [`commentRemovePatternFlags`](#commentremovepatternflags) to change this behavior.
 
 This is useful when combining with other Prisma generators that use annotations in triple-slash comments.
 For example, [prismabox](https://github.com/m1212e/prismabox) uses annotations like `@prismabox.hide` or `@prismabox.options{ min: 10, max: 20 }` in comments. Since Prisma concatenates multiple `///` comments with `\n`, you need to include the newline in the pattern.
@@ -240,6 +242,31 @@ The following comment is generated (annotation line is removed).
 
 ```sql
 COMMENT ON COLUMN "users"."user_id" IS 'this is the user id';
+```
+
+### commentRemovePatternFlags
+
+Specify the regex flags for `commentRemovePattern` with `commentRemovePatternFlags`.
+The default is `g` (global — removes all occurrences). You can specify any combination of valid JavaScript regex flags (`g`, `i`, `m`, etc.).
+
+For example, the following removes `@internal` case-insensitively and globally.
+
+```prisma
+generator comments {
+  provider                  = "prisma-db-comments-generator"
+  commentRemovePattern      = " @internal"
+  commentRemovePatternFlags = "gi"
+}
+```
+
+To revert to the previous behavior (remove only the first occurrence), specify an empty string.
+
+```prisma
+generator comments {
+  provider                  = "prisma-db-comments-generator"
+  commentRemovePattern      = " @internal"
+  commentRemovePatternFlags = ""
+}
 ```
 
 ### commentTransformScript
