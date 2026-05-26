@@ -140,7 +140,10 @@ const createFieldCommentString = (
     if (comment !== "") {
       comment += "\n";
     }
-    comment += `enum: ${field.typeEnum.dbName}(${field.typeEnum.values.join(", ")})`;
+    comment += `enum: ${field.typeEnum.dbName}(${field.typeEnum.values.map((v) => (v.documentation ? `${v.dbName}: ${v.documentation}` : v.dbName)).join(", ")})`;
+    if (field.typeEnum.documentation) {
+      comment += ` - ${field.typeEnum.documentation}`;
+    }
   }
 
   return comment;

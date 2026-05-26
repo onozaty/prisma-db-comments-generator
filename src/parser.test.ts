@@ -92,7 +92,10 @@ describe("parse", () => {
             typeEnum: {
               dbName: "user_role",
               name: "Role",
-              values: ["admin", "user"],
+              values: [
+                { dbName: "admin", name: "ADMIN" },
+                { dbName: "user", name: "USER" },
+              ],
               documentation: "ユーザーロールを定義します",
             },
           },
@@ -171,7 +174,10 @@ describe("parse", () => {
             typeEnum: {
               dbName: "Status",
               name: "Status",
-              values: ["ACTIVE", "INACTIVE"],
+              values: [
+                { dbName: "ACTIVE", name: "ACTIVE" },
+                { dbName: "INACTIVE", name: "INACTIVE" },
+              ],
               documentation: undefined,
             },
           },

@@ -12,7 +12,11 @@ const parseEnum = (datamodelEnum: DMMF.DatamodelEnum): TypeEnum => {
   return {
     dbName: datamodelEnum.dbName ?? datamodelEnum.name,
     name: datamodelEnum.name,
-    values: datamodelEnum.values.map((x) => x.dbName ?? x.name),
+    values: datamodelEnum.values.map((x) => ({
+      dbName: x.dbName ?? x.name,
+      name: x.name,
+      documentation: x.documentation,
+    })),
     documentation: datamodelEnum.documentation,
   };
 };
@@ -61,6 +65,12 @@ export type Field = {
 export type TypeEnum = {
   dbName: string;
   name: string;
-  values: string[];
+  values: TypeEnumValue[];
+  documentation?: string;
+};
+
+export type TypeEnumValue = {
+  dbName: string | null;
+  name: string;
   documentation?: string;
 };

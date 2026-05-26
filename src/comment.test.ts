@@ -33,7 +33,10 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "enum1",
               name: "enum1_name",
-              values: ["A", "B"],
+              values: [
+                { dbName: "A", name: "A" },
+                { dbName: "B", name: "B" },
+              ],
               documentation: "enum1 comment",
             },
           },
@@ -42,7 +45,11 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "enum2",
               name: "enum2_name",
-              values: ["A", "B", "C"],
+              values: [
+                { dbName: "A", name: "A" },
+                { dbName: "B", name: "B" },
+                { dbName: "C", name: "C" },
+              ],
             },
           },
         ],
@@ -125,7 +132,10 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "enum1",
               name: "enum1_name",
-              values: ["A", "B"],
+              values: [
+                { dbName: "A", name: "A" },
+                { dbName: "B", name: "B" },
+              ],
               documentation: "enum1 comment",
             },
           },
@@ -134,7 +144,11 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "enum2",
               name: "enum2_name",
-              values: ["A", "B", "C"],
+              values: [
+                { dbName: "A", name: "A" },
+                { dbName: "B", name: "B" },
+                { dbName: "C", name: "C" },
+              ],
             },
           },
         ],
@@ -174,7 +188,7 @@ describe("createComments", () => {
             schema: undefined,
             tableName: "table1",
             columnName: "field3",
-            comment: "field3 comment\nenum: enum1(A, B)",
+            comment: "field3 comment\nenum: enum1(A, B) - enum1 comment",
           },
           {
             schema: undefined,
@@ -202,7 +216,10 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "enum1",
               name: "enum1_name",
-              values: ["A", "B"],
+              values: [
+                { dbName: "A", name: "A" },
+                { dbName: "B", name: "B" },
+              ],
               documentation: "enum1 comment",
             },
           },
@@ -211,7 +228,11 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "enum2",
               name: "enum2_name",
-              values: ["A", "B", "C"],
+              values: [
+                { dbName: "A", name: "A" },
+                { dbName: "B", name: "B" },
+                { dbName: "C", name: "C" },
+              ],
             },
           },
         ],
@@ -261,7 +282,10 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "enum1",
               name: "enum1_name",
-              values: ["A", "B"],
+              values: [
+                { dbName: "A", name: "A" },
+                { dbName: "B", name: "B" },
+              ],
               documentation: "enum1 comment",
             },
           },
@@ -270,7 +294,11 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "enum2",
               name: "enum2_name",
-              values: ["A", "B", "C"],
+              values: [
+                { dbName: "A", name: "A" },
+                { dbName: "B", name: "B" },
+                { dbName: "C", name: "C" },
+              ],
             },
           },
         ],
@@ -429,7 +457,10 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "enum1",
               name: "enum1",
-              values: ["A", "B"],
+              values: [
+                { dbName: "A", name: "A" },
+                { dbName: "B", name: "B" },
+              ],
               documentation: "enum1 comment",
             },
           },
@@ -445,7 +476,10 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "enum2",
               name: "enum2",
-              values: ["X", "Y"],
+              values: [
+                { dbName: "X", name: "X" },
+                { dbName: "Y", name: "Y" },
+              ],
               documentation: "enum2 comment",
             },
           },
@@ -474,7 +508,7 @@ describe("createComments", () => {
             schema: undefined,
             tableName: "keep_table",
             columnName: "field1",
-            comment: "should include enum\nenum: enum2(X, Y)",
+            comment: "should include enum\nenum: enum2(X, Y) - enum2 comment",
           },
         ],
       },
@@ -510,7 +544,18 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "product_type",
               name: "ProductType",
-              values: ["PHYSICAL", "DIGITAL"],
+              values: [
+                {
+                  dbName: "PHYSICAL",
+                  name: "PHYSICAL",
+                  documentation: "物理商品",
+                },
+                {
+                  dbName: "DIGITAL",
+                  name: "DIGITAL",
+                  documentation: "デジタル商品",
+                },
+              ],
               documentation: "商品種別",
             },
           },
@@ -519,7 +564,14 @@ describe("createComments", () => {
             typeEnum: {
               dbName: "product_status",
               name: "ProductStatus",
-              values: ["DRAFT", "PUBLISHED"],
+              values: [
+                { dbName: "DRAFT", name: "DRAFT", documentation: "下書き" },
+                {
+                  dbName: "PUBLISHED",
+                  name: "PUBLISHED",
+                  documentation: "公開済み",
+                },
+              ],
             },
           },
         ],
@@ -568,13 +620,14 @@ describe("createComments", () => {
             schema: "shop",
             tableName: "products",
             columnName: "id",
-            comment: "商品ID\nenum: product_type(PHYSICAL, DIGITAL)",
+            comment:
+              "商品ID\nenum: product_type(PHYSICAL: 物理商品, DIGITAL: デジタル商品) - 商品種別",
           },
           {
             schema: "shop",
             tableName: "products",
             columnName: "status",
-            comment: "enum: product_status(DRAFT, PUBLISHED)",
+            comment: "enum: product_status(DRAFT: 下書き, PUBLISHED: 公開済み)",
           },
         ],
       },

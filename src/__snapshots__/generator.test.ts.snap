@@ -49,7 +49,7 @@ exports[`basic > comments-latest.json 1`] = `
       {
         "tableName": "products",
         "columnName": "type",
-        "comment": "Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION)"
+        "comment": "Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION) - Product type enumeration"
       },
       {
         "tableName": "products",
@@ -121,7 +121,7 @@ COMMENT ON COLUMN "customers"."email" IS 'e-mail';
 COMMENT ON TABLE "products" IS 'Product';
 COMMENT ON COLUMN "products"."product_id" IS 'Product ID';
 COMMENT ON COLUMN "products"."name" IS 'Product Name';
-COMMENT ON COLUMN "products"."type" IS E'Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION)';
+COMMENT ON COLUMN "products"."type" IS E'Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION) - Product type enumeration';
 COMMENT ON COLUMN "products"."description" IS 'Product Description';
 COMMENT ON COLUMN "products"."price" IS 'Price';
 
@@ -251,7 +251,7 @@ exports[`diff > comments-latest.json 1`] = `
       {
         "tableName": "products",
         "columnName": "type",
-        "comment": "Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION)"
+        "comment": "Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION) - Product type enumeration"
       },
       {
         "tableName": "products",
@@ -540,7 +540,7 @@ exports[`mysql > comments-latest.json 1`] = `
       {
         "tableName": "products",
         "columnName": "type",
-        "comment": "Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION)"
+        "comment": "Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION) - Product type enumeration"
       },
       {
         "tableName": "products",
@@ -651,7 +651,7 @@ CALL prisma_update_column_comment('customers', 'email', 'e-mail');
 ALTER TABLE \`products\` COMMENT = 'Product''s';
 CALL prisma_update_column_comment('products', 'product_id', 'Product ID');
 CALL prisma_update_column_comment('products', 'name', 'Product Name');
-CALL prisma_update_column_comment('products', 'type', 'Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION)');
+CALL prisma_update_column_comment('products', 'type', 'Product Type\\nenum: enum_product_type(BOOK, TOY, FASHION) - Product type enumeration');
 CALL prisma_update_column_comment('products', 'description', 'Product Description');
 CALL prisma_update_column_comment('products', 'price', 'Price');
 
