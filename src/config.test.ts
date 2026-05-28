@@ -135,7 +135,41 @@ describe("readConfig", () => {
     expect(config.includeEnumInFieldComment).toBe(true);
   });
 
-  test("parses includeEnumInFieldComment as false for any non-true string", async () => {
+  test("parses includeEnumInFieldComment as simple", async () => {
+    // Arrange
+    const generator = {
+      ...baseGenerator,
+      config: {
+        includeEnumInFieldComment: "simple",
+      },
+    };
+    const datasources = baseDatasources;
+
+    // Act
+    const config = await readConfig({ generator, datasources });
+
+    // Assert
+    expect(config.includeEnumInFieldComment).toBe("simple");
+  });
+
+  test("parses includeEnumInFieldComment as detailed", async () => {
+    // Arrange
+    const generator = {
+      ...baseGenerator,
+      config: {
+        includeEnumInFieldComment: "detailed",
+      },
+    };
+    const datasources = baseDatasources;
+
+    // Act
+    const config = await readConfig({ generator, datasources });
+
+    // Assert
+    expect(config.includeEnumInFieldComment).toBe("detailed");
+  });
+
+  test("parses includeEnumInFieldComment as false for unsupported strings", async () => {
     // Arrange
     const generator = {
       ...baseGenerator,

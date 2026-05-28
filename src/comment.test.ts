@@ -117,7 +117,7 @@ describe("createComments", () => {
     });
   });
 
-  test("includeEnumInFieldComment", () => {
+  test("includeEnumInFieldComment true", () => {
     // Arrange
     const models: Model[] = [
       {
@@ -188,13 +188,98 @@ describe("createComments", () => {
             schema: undefined,
             tableName: "table1",
             columnName: "field3",
-            comment: "field3 comment\nenum: enum1(A, B) - enum1 comment",
+            comment: "field3 comment\nenum: enum1(A, B)",
           },
           {
             schema: undefined,
             tableName: "table1",
             columnName: "field4",
             comment: "enum: enum2(A, B, C)",
+          },
+        ],
+      },
+    });
+  });
+
+  test('includeEnumInFieldComment "detailed"', () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "table1",
+        documentation: "table1 comment",
+        fields: [
+          { dbName: "field1", documentation: "field1 comment" },
+          { dbName: "field2" },
+          {
+            dbName: "field3",
+            documentation: "field3 comment",
+            typeEnum: {
+              dbName: "enum1",
+              name: "enum1_name",
+              values: [
+                { dbName: "A", name: "A", documentation: "Value A" },
+                { dbName: "B", name: "B", documentation: "Value B" },
+              ],
+              documentation: "enum1 comment",
+            },
+          },
+          {
+            dbName: "field4",
+            typeEnum: {
+              dbName: "enum2",
+              name: "enum2_name",
+              values: [
+                { dbName: "A", name: "A", documentation: "Value A" },
+                { dbName: "B", name: "B" },
+                { dbName: "C", name: "C", documentation: "Value C" },
+              ],
+            },
+          },
+        ],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      includeEnumInFieldComment: "detailed",
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      table1: {
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "table1 comment",
+        },
+        columns: [
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field1",
+            comment: "field1 comment",
+          },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field2",
+            comment: "",
+          },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field3",
+            comment:
+              "field3 comment\nenum: enum1(A: Value A, B: Value B) - enum1 comment",
+          },
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field4",
+            comment: "enum: enum2(A: Value A, B, C: Value C)",
           },
         ],
       },
@@ -444,7 +529,7 @@ describe("createComments", () => {
     });
   });
 
-  test("combines ignorePattern and includeEnumInFieldComment", () => {
+  test("combines ignorePattern and includeEnumInFieldComment simple", () => {
     // Arrange
     const models: Model[] = [
       {
@@ -492,7 +577,7 @@ describe("createComments", () => {
       targets: AllTargets,
       ignorePattern: /^ignore_/,
       ignoreCommentPattern: undefined,
-      includeEnumInFieldComment: true,
+      includeEnumInFieldComment: "simple",
     });
 
     // Assert
@@ -508,7 +593,7 @@ describe("createComments", () => {
             schema: undefined,
             tableName: "keep_table",
             columnName: "field1",
-            comment: "should include enum\nenum: enum2(X, Y) - enum2 comment",
+            comment: "should include enum\nenum: enum2(X, Y)",
           },
         ],
       },
@@ -583,7 +668,7 @@ describe("createComments", () => {
       targets: AllTargets,
       ignorePattern: undefined,
       ignoreCommentPattern: undefined,
-      includeEnumInFieldComment: true,
+      includeEnumInFieldComment: "detailed",
     });
 
     // Assert

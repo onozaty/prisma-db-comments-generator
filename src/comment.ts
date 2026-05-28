@@ -1,5 +1,5 @@
 import { Config } from "./config";
-import { Field, Model } from "./parser";
+import { Field, Model, TypeEnum } from "./parser";
 
 export type CommentTransformContext = {
   type: "table" | "column";
@@ -136,14 +136,40 @@ const createFieldCommentString = (
         })
       : "";
 
-  if (config.includeEnumInFieldComment && field.typeEnum) {
+  const enumComment = createEnumCommentString(
+    field.typeEnum,
+    config.includeEnumInFieldComment,
+  );
+  if (enumComment) {
     if (comment !== "") {
       comment += "\n";
     }
-    comment += `enum: ${field.typeEnum.dbName}(${field.typeEnum.values.map((v) => (v.documentation ? `${v.dbName}: ${v.documentation}` : v.dbName)).join(", ")})`;
-    if (field.typeEnum.documentation) {
-      comment += ` - ${field.typeEnum.documentation}`;
-    }
+    comment += enumComment;
+  }
+
+  return comment;
+};
+
+const createEnumCommentString = (
+  typeEnum: TypeEnum | undefined,
+  includeEnumInFieldComment: Config["includeEnumInFieldComment"],
+): string | undefined => {
+  if (!includeEnumInFieldComment || !typeEnum) {
+    return undefined;
+  }
+
+  const isDetailed = includeEnumInFieldComment === "detailed";
+  const enumValues = typeEnum.values
+    .map((value) =>
+      isDetailed && value.documentation
+        ? `${value.dbName}: ${value.documentation}`
+        : value.dbName,
+    )
+    .join(", ");
+
+  let comment = `enum: ${typeEnum.dbName}(${enumValues})`;
+  if (isDetailed && typeEnum.documentation) {
+    comment += ` - ${typeEnum.documentation}`;
   }
 
   return comment;

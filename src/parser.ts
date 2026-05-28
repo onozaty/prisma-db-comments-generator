@@ -70,7 +70,7 @@ export type TypeEnum = {
 };
 
 export type TypeEnumValue = {
-  dbName: string | null;
+  dbName: string;
   name: string;
   documentation?: string;
 };

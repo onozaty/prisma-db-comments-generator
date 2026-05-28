@@ -26,8 +26,8 @@ describe("parse", () => {
           name: "Role",
           dbName: "user_role",
           values: [
-            { name: "ADMIN", dbName: "admin" },
-            { name: "USER", dbName: "user" },
+            { name: "ADMIN", dbName: "admin", documentation: "管理者" },
+            { name: "USER", dbName: "user", documentation: "一般ユーザー" },
           ],
           documentation: "ユーザーロールを定義します",
         },
@@ -93,8 +93,12 @@ describe("parse", () => {
               dbName: "user_role",
               name: "Role",
               values: [
-                { dbName: "admin", name: "ADMIN" },
-                { dbName: "user", name: "USER" },
+                { dbName: "admin", name: "ADMIN", documentation: "管理者" },
+                {
+                  dbName: "user",
+                  name: "USER",
+                  documentation: "一般ユーザー",
+                },
               ],
               documentation: "ユーザーロールを定義します",
             },

@@ -11,10 +11,12 @@ export interface Config {
   commentRemovePattern?: RegExp;
   commentRemovePatternFlags?: string;
   commentTransformFn?: CommentTransformFn;
-  includeEnumInFieldComment: boolean;
+  includeEnumInFieldComment: IncludeEnumInFieldComment;
   provider: DatabaseProvider;
   outputDir: string;
 }
+
+export type IncludeEnumInFieldComment = boolean | "simple" | "detailed";
 
 export const readConfig = async ({
   generator,
@@ -88,14 +90,9 @@ export const readConfig = async ({
     commentTransformFn = fn;
   }
 
-  let includeEnumInFieldComment = false;
-  if (
-    generator.config.includeEnumInFieldComment &&
-    typeof generator.config.includeEnumInFieldComment === "string"
-  ) {
-    includeEnumInFieldComment =
-      generator.config.includeEnumInFieldComment === "true";
-  }
+  const includeEnumInFieldComment = parseIncludeEnumInFieldComment(
+    generator.config.includeEnumInFieldComment,
+  );
 
   const provider: DatabaseProvider =
     datasources.length > 0
@@ -117,4 +114,16 @@ export const readConfig = async ({
     provider,
     outputDir,
   };
+};
+
+const parseIncludeEnumInFieldComment = (
+  value: unknown,
+): IncludeEnumInFieldComment => {
+  if (value === true || value === "true") {
+    return true;
+  }
+  if (value === "simple" || value === "detailed") {
+    return value;
+  }
+  return false;
 };
