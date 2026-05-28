@@ -27,7 +27,7 @@ describe("parse", () => {
           dbName: "user_role",
           values: [
             { name: "ADMIN", dbName: "admin", documentation: "管理者" },
-            { name: "USER", dbName: "user", documentation: "一般ユーザー" },
+            { name: "USER", dbName: "user" },
           ],
           documentation: "ユーザーロールを定義します",
         },
@@ -77,8 +77,9 @@ describe("parse", () => {
     const result = parse(datamodel);
 
     // Assert
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
+        schema: undefined,
         dbName: "users",
         fields: [
           {
@@ -97,7 +98,6 @@ describe("parse", () => {
                 {
                   dbName: "user",
                   name: "USER",
-                  documentation: "一般ユーザー",
                 },
               ],
               documentation: "ユーザーロールを定義します",
@@ -163,8 +163,9 @@ describe("parse", () => {
     const result = parse(datamodel);
 
     // Assert
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
+        schema: undefined,
         dbName: "Post",
         fields: [
           {

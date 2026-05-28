@@ -15,7 +15,9 @@ const parseEnum = (datamodelEnum: DMMF.DatamodelEnum): TypeEnum => {
     values: datamodelEnum.values.map((x) => ({
       dbName: x.dbName ?? x.name,
       name: x.name,
-      documentation: x.documentation,
+      ...(x.documentation !== undefined
+        ? { documentation: x.documentation }
+        : {}),
     })),
     documentation: datamodelEnum.documentation,
   };
