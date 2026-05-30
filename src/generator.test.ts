@@ -156,6 +156,21 @@ test("comment-remove-pattern-flags", async () => {
   expect(commentsLatestJsonContent).toMatchSnapshot("comments-latest.json");
 });
 
+test("include-enum-detailed", async () => {
+  // Arrange
+  const name = "include-enum-detailed";
+
+  // Act
+  executeGenerate(name);
+
+  // Assert
+  const migrationSqlContent = readMigrationSql(name);
+  expect(migrationSqlContent).toMatchSnapshot("migration.sql");
+
+  const commentsLatestJsonContent = readCommentsLatestJson(name);
+  expect(commentsLatestJsonContent).toMatchSnapshot("comments-latest.json");
+});
+
 test("multi-file-schema", async () => {
   // Arrange
   const name = "multi-file-schema";

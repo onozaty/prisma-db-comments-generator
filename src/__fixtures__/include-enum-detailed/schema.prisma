@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator comments {
+  provider                  = "node ./dist/generator.cjs"
+  includeEnumInFieldComment = "detailed"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// 商品種別
+enum ProductType {
+  /// 物理商品
+  BOOK
+  /// デジタル商品
+  DIGITAL
+
+  @@map("product_type")
+}
+
+/// ステータス
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+/// 商品
+model Product {
+  /// 商品ID
+  id     Int         @id @map("product_id")
+  /// 商品種別
+  type   ProductType
+  status Status
+
+  @@map("products")
+}

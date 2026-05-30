@@ -286,6 +286,157 @@ describe("createComments", () => {
     });
   });
 
+  test('includeEnumInFieldComment "detailed" - enumにdocumentationなし', () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "table1",
+        fields: [
+          {
+            dbName: "field1",
+            typeEnum: {
+              dbName: "enum1",
+              name: "enum1_name",
+              values: [
+                { dbName: "A", name: "A" },
+                { dbName: "B", name: "B" },
+              ],
+            },
+          },
+        ],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      includeEnumInFieldComment: "detailed",
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      table1: {
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "",
+        },
+        columns: [
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field1",
+            comment: "enum: enum1(A, B)",
+          },
+        ],
+      },
+    });
+  });
+
+  test('includeEnumInFieldComment "detailed" - 全値にdocumentationあり', () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "table1",
+        fields: [
+          {
+            dbName: "field1",
+            documentation: "field1 comment",
+            typeEnum: {
+              dbName: "enum1",
+              name: "enum1_name",
+              values: [
+                { dbName: "A", name: "A", documentation: "doc A" },
+                { dbName: "B", name: "B", documentation: "doc B" },
+              ],
+              documentation: "enum doc",
+            },
+          },
+        ],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      includeEnumInFieldComment: "detailed",
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      table1: {
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "",
+        },
+        columns: [
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field1",
+            comment:
+              "field1 comment\nenum: enum1(A: doc A, B: doc B) - enum doc",
+          },
+        ],
+      },
+    });
+  });
+
+  test('includeEnumInFieldComment "simple" - value documentationを無視する', () => {
+    // Arrange
+    const models: Model[] = [
+      {
+        dbName: "table1",
+        fields: [
+          {
+            dbName: "field1",
+            typeEnum: {
+              dbName: "enum1",
+              name: "enum1_name",
+              values: [
+                { dbName: "A", name: "A", documentation: "doc A" },
+                { dbName: "B", name: "B", documentation: "doc B" },
+              ],
+              documentation: "enum doc",
+            },
+          },
+        ],
+      },
+    ];
+
+    // Act
+    const comments = createComments(models, {
+      targets: AllTargets,
+      ignorePattern: undefined,
+      ignoreCommentPattern: undefined,
+      includeEnumInFieldComment: "simple",
+    });
+
+    // Assert
+    expect(comments).toStrictEqual({
+      table1: {
+        table: {
+          schema: undefined,
+          tableName: "table1",
+          comment: "",
+        },
+        columns: [
+          {
+            schema: undefined,
+            tableName: "table1",
+            columnName: "field1",
+            comment: "enum: enum1(A, B)",
+          },
+        ],
+      },
+    });
+  });
+
   test("ignorePattern", () => {
     // Arrange
     const models: Model[] = [
