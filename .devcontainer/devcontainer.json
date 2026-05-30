@@ -15,6 +15,7 @@
     }
   },
   "features": {
-    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0.5": {}
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   }
 }
