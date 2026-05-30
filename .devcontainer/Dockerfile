@@ -3,7 +3,7 @@ FROM node:24-slim
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
 RUN corepack enable \
-  && corepack prepare pnpm@11.4.0 --activate
+  && corepack prepare pnpm@10.34.1 --activate
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   sudo \
