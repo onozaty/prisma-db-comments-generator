@@ -352,6 +352,44 @@ COMMENT ON COLUMN "shops"."created_at" IS 'Created At';
 "
 `;
 
+exports[`include-enum-detailed > comments-latest.json 1`] = `
+"{
+  "products": {
+    "table": {
+      "tableName": "products",
+      "comment": "商品"
+    },
+    "columns": [
+      {
+        "tableName": "products",
+        "columnName": "product_id",
+        "comment": "商品ID"
+      },
+      {
+        "tableName": "products",
+        "columnName": "type",
+        "comment": "商品種別\\nenum: product_type(BOOK: 物理商品, DIGITAL: デジタル商品) - 商品種別"
+      },
+      {
+        "tableName": "products",
+        "columnName": "status",
+        "comment": "enum: Status(ACTIVE, INACTIVE) - ステータス"
+      }
+    ]
+  }
+}"
+`;
+
+exports[`include-enum-detailed > migration.sql 1`] = `
+"
+-- products comments
+COMMENT ON TABLE "products" IS '商品';
+COMMENT ON COLUMN "products"."product_id" IS '商品ID';
+COMMENT ON COLUMN "products"."type" IS E'商品種別\\nenum: product_type(BOOK: 物理商品, DIGITAL: デジタル商品) - 商品種別';
+COMMENT ON COLUMN "products"."status" IS 'enum: Status(ACTIVE, INACTIVE) - ステータス';
+"
+`;
+
 exports[`multi-file-schema > comments-latest.json 1`] = `
 "{
   "posts": {

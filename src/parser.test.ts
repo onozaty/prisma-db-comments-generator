@@ -1,5 +1,5 @@
 import { DMMF } from "@prisma/generator-helper";
-import { parse } from "./parser";
+import { parse, EnumValueWithDocumentation } from "./parser";
 
 describe("parse", () => {
   test("returns empty array for empty datamodel", () => {
@@ -26,9 +26,9 @@ describe("parse", () => {
           name: "Role",
           dbName: "user_role",
           values: [
-            { name: "ADMIN", dbName: "admin" },
+            { name: "ADMIN", dbName: "admin", documentation: "管理者" },
             { name: "USER", dbName: "user" },
-          ],
+          ] as EnumValueWithDocumentation[],
           documentation: "ユーザーロールを定義します",
         },
       ],
@@ -77,8 +77,9 @@ describe("parse", () => {
     const result = parse(datamodel);
 
     // Assert
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
+        schema: undefined,
         dbName: "users",
         fields: [
           {
@@ -92,7 +93,13 @@ describe("parse", () => {
             typeEnum: {
               dbName: "user_role",
               name: "Role",
-              values: ["admin", "user"],
+              values: [
+                { dbName: "admin", name: "ADMIN", documentation: "管理者" },
+                {
+                  dbName: "user",
+                  name: "USER",
+                },
+              ],
               documentation: "ユーザーロールを定義します",
             },
           },
@@ -156,8 +163,9 @@ describe("parse", () => {
     const result = parse(datamodel);
 
     // Assert
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
+        schema: undefined,
         dbName: "Post",
         fields: [
           {
@@ -171,7 +179,10 @@ describe("parse", () => {
             typeEnum: {
               dbName: "Status",
               name: "Status",
-              values: ["ACTIVE", "INACTIVE"],
+              values: [
+                { dbName: "ACTIVE", name: "ACTIVE" },
+                { dbName: "INACTIVE", name: "INACTIVE" },
+              ],
               documentation: undefined,
             },
           },

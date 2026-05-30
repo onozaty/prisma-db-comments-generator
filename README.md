@@ -311,8 +311,17 @@ If both `commentRemovePattern` and `commentTransformScript` are specified, `comm
 
 ### includeEnumInFieldComment
 
-If `includeEnumInFieldComment` is set to true, information about the enum is appended to the column comment.  
+If `includeEnumInFieldComment` is set, information about the enum is appended to the column comment.  
 Default is `false`.
+
+Supported values:
+
+- `true` / `"simple"`: Simple format. Lists enum values, e.g. `enum: enum_name(VALUE1, VALUE2)`. `true` and `"simple"` behave identically.
+- `"detailed"`: Detailed format. Includes per-value `///` documentation and enum-level `///` documentation,
+  e.g. `enum: enum_name(VALUE1: value documentation, VALUE2: value documentation) - Enum documentation`.
+  If a value has no documentation, only the value name is shown. If the enum itself has no documentation, the ` - ...` suffix is omitted.
+
+### simple
 
 ```prisma
 generator comments {
@@ -324,9 +333,12 @@ generator comments {
 If `includeEnumInFieldComment` is set to `true` with the following definition,
 
 ```prisma
+/// Product type
 enum ProductType {
+  /// Physical goods
   BOOK
-  TOY
+  /// Digital goods
+  DIGITAL
   FASHION
 
   @@map("enum_product_type")
@@ -344,7 +356,44 @@ model Product {
 The following comment is generated.
 
 ```sql
-COMMENT ON COLUMN "products"."type" IS E'Product Type\nenum: enum_product_type(BOOK, TOY, FASHION)';
+COMMENT ON COLUMN "products"."type" IS E'Product Type\nenum: enum_product_type(BOOK, DIGITAL, FASHION)';
+```
+
+### detailed
+
+```prisma
+generator comments {
+  provider                  = "prisma-db-comments-generator"
+  includeEnumInFieldComment = "detailed"
+}
+```
+
+If `includeEnumInFieldComment` is set to `"detailed"` with the following definition,
+
+```prisma
+/// Product type
+enum ProductType {
+  /// Physical goods
+  BOOK
+  /// Digital goods
+  DIGITAL
+
+  @@map("product_type")
+}
+
+/// Product
+model Product {
+  /// Product Type
+  type ProductType
+
+  // others...
+}
+```
+
+The following comment is generated.
+
+```sql
+COMMENT ON COLUMN "products"."type" IS E'Product Type\nenum: product_type(BOOK: Physical goods, DIGITAL: Digital goods) - Product type';
 ```
 
 ## Supported Databases
