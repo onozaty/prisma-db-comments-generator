@@ -6,6 +6,8 @@ services:
     volumes:
       - ../..:/workspaces:cached
       - app-node-modules:/workspaces/app/node_modules
+      - claude-config:/home/node/.claude
+      - gh-config:/home/node/.config/gh
     command: sleep infinity
     depends_on:
       - db
@@ -68,3 +70,5 @@ volumes:
   mysql-data:
   app-node-modules:
   pgadmin-data:
+  claude-config:
+  gh-config:

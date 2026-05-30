@@ -177,7 +177,10 @@ const executeGenerate = (name: string) => {
     name === "multi-file-schema"
       ? path.join(fixturesDir, name, "schema")
       : path.join(fixturesDir, name, "schema.prisma");
-  child_process.execSync(`npx prisma generate --schema ${schemaPath}`);
+  child_process.execSync(
+    `node_modules/.bin/prisma generate --schema ${schemaPath}`,
+    { cwd: path.join(__dirname, "..") },
+  );
 };
 
 const readCommentsLatestJson = (name: string): string => {
