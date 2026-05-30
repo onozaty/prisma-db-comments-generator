@@ -1,5 +1,5 @@
 import { DMMF } from "@prisma/generator-helper";
-import { parse } from "./parser";
+import { parse, EnumValueWithDocumentation } from "./parser";
 
 describe("parse", () => {
   test("returns empty array for empty datamodel", () => {
@@ -28,7 +28,7 @@ describe("parse", () => {
           values: [
             { name: "ADMIN", dbName: "admin", documentation: "管理者" },
             { name: "USER", dbName: "user" },
-          ],
+          ] as EnumValueWithDocumentation[],
           documentation: "ユーザーロールを定義します",
         },
       ],

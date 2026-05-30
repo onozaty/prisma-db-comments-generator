@@ -1,5 +1,11 @@
 import { DMMF } from "@prisma/generator-helper";
 
+// DMMF.EnumValue type definition is missing documentation field, but it is
+// actually present in the runtime data since Prisma 4.16.0.
+export type EnumValueWithDocumentation = DMMF.EnumValue & {
+  documentation?: string;
+};
+
 export const parse = (datamodel: DMMF.Datamodel) => {
   const typeEnums = datamodel.enums.map((x) => parseEnum(x));
   const typeEnumMap = new Map(typeEnums.map((x) => [x.name, x]));
@@ -12,7 +18,7 @@ const parseEnum = (datamodelEnum: DMMF.DatamodelEnum): TypeEnum => {
   return {
     dbName: datamodelEnum.dbName ?? datamodelEnum.name,
     name: datamodelEnum.name,
-    values: datamodelEnum.values.map((x) => ({
+    values: (datamodelEnum.values as EnumValueWithDocumentation[]).map((x) => ({
       dbName: x.dbName ?? x.name,
       name: x.name,
       ...(x.documentation !== undefined
