@@ -1,10 +1,14 @@
-FROM node:20-slim
+FROM node:24-slim
 
-RUN npm install -g pnpm
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
-RUN apt-get update && apt-get install -y \
+RUN corepack enable \
+  && corepack prepare pnpm@11.4.0 --activate
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
   sudo \
-  git
+  git \
+  && rm -rf /var/lib/apt/lists/*
 
 # Add node user to sudoers for development container (password-less sudo)
 RUN echo 'node ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
