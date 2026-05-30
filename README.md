@@ -184,7 +184,7 @@ generator comments {
 
 ### ignorePattern
 
-Specify the model to be excluded from making comments as a regular expression with `ignorePattern`.
+Specify the model to be excluded from making comments as a regular expression with `ignorePattern`.  
 The name specified here is the name in the database. Therefore, if `@@map` is specified, it will be the name in `@@map`.
 
 For example, the following is a model with `_view` as a suffix that is excluded.
@@ -198,7 +198,7 @@ generator comments {
 
 ### ignoreCommentPattern
 
-Specify the model to be excluded from making comments as a regular expression with `ignoreCommentPattern`.
+Specify the model to be excluded from making comments as a regular expression with `ignoreCommentPattern`.  
 
 For example, the following excludes comments containing `@TypeGraphQL`.
 
@@ -311,7 +311,7 @@ If both `commentRemovePattern` and `commentTransformScript` are specified, `comm
 
 ### includeEnumInFieldComment
 
-If `includeEnumInFieldComment` is set, information about the enum is appended to the column comment.
+If `includeEnumInFieldComment` is set, information about the enum is appended to the column comment.  
 Default is `false`.
 
 Supported values:
